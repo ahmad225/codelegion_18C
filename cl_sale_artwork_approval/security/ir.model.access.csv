@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_artwork_salesman,cl.artwork salesman,model_cl_artwork,sales_team.group_sale_salesman,1,1,1,0
+access_cl_artwork_designer,cl.artwork designer,model_cl_artwork,group_cl_artwork_designer,1,1,0,0
+access_cl_artwork_manager,cl.artwork manager,model_cl_artwork,group_cl_artwork_manager,1,1,1,1
+access_cl_artwork_mrp_user,cl.artwork manufacturing user,model_cl_artwork,mrp.group_mrp_user,1,0,0,0
+access_cl_artwork_rework_wizard,cl.artwork.rework.wizard salesman,model_cl_artwork_rework_wizard,sales_team.group_sale_salesman,1,1,1,1

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_courier_cost_view_list" model="ir.ui.view">
+        <field name="name">cl.courier.cost.list</field>
+        <field name="model">cl.courier.cost</field>
+        <field name="arch" type="xml">
+            <list string="Courier Costs" editable="bottom" create="0" delete="0" open_form_view="1"
+                  decoration-danger="state == 'error'" decoration-warning="cl_is_overrun"
+                  decoration-muted="cl_is_locked" sample="1">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" column_invisible="True"/>
+                <field name="cl_date"/>
+                <field name="name"/>
+                <field name="cl_sale_id" optional="show"/>
+                <field name="cl_partner_id"/>
+                <field name="cl_carrier_id"/>
+                <field name="cl_weight" optional="show"/>
+                <field name="cl_expected_cost" sum="Total" invisible="state == 'error'"/>
+                <field name="cl_customer_charge" sum="Total" optional="show"/>
+                <field name="cl_has_actual_cost" widget="boolean_toggle" readonly="cl_is_locked"/>
+                <field name="cl_actual_cost" sum="Total" readonly="cl_is_locked"/>
+                <field name="cl_billed_expected_cost" sum="Total" optional="hide" invisible="not cl_has_actual_cost"/>
+                <field name="cl_variance" sum="Total" invisible="not cl_has_actual_cost or state == 'error'"/>
+                <field name="cl_margin" sum="Total" optional="show" invisible="not cl_has_actual_cost"/>
+                <field name="cl_expected_margin" sum="Total" optional="hide" invisible="state == 'error'"/>
+                <field name="cl_notes" optional="hide" readonly="cl_is_locked"/>
+                <field name="cl_error_message" optional="show" invisible="state != 'error'" class="text-danger"/>
+                <field name="cl_is_overrun" column_invisible="True"/>
+                <field name="cl_is_locked" widget="boolean" readonly="1" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <button name="action_cl_lock" type="object" icon="fa-lock" title="Confirm and lock the actual cost"
+                        invisible="cl_is_locked or not cl_has_actual_cost"/>
+                <button name="action_cl_unlock" type="object" icon="fa-unlock" title="Unlock"
+                        invisible="not cl_is_locked" groups="cl_courier_cost.group_cl_courier_manager"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_view_form" model="ir.ui.view">
+        <field name="name">cl.courier.cost.form</field>
+        <field name="model">cl.courier.cost</field>
+        <field name="arch" type="xml">
+            <form string="Courier Cost" create="0" delete="0">
+                <header>
+                    <button name="action_cl_lock" type="object" string="Confirm &amp; Lock" class="btn-primary"
+                            invisible="cl_is_locked or not cl_has_actual_cost"/>
+                    <button name="action_cl_unlock" type="object" string="Unlock"
+                            invisible="not cl_is_locked" groups="cl_courier_cost.group_cl_courier_manager"/>
+                    <button name="action_cl_recompute" type="object" string="Recompute"
+                            invisible="cl_has_actual_cost or cl_is_locked"
+                            groups="cl_courier_cost.group_cl_courier_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_cl_open_picking" type="object" class="oe_stat_button" icon="fa-truck"
+                                string="Delivery"/>
+                    </div>
+                    <widget name="web_ribbon" title="Locked" bg_color="text-bg-secondary" invisible="not cl_is_locked"/>
+                    <div class="alert alert-danger" role="alert" invisible="state != 'error'">
+                        <field name="cl_error_message"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Delivery">
+                            <field name="cl_picking_id"/>
+                            <field name="cl_sale_id"/>
+                            <field name="cl_partner_id"/>
+                            <field name="cl_carrier_id"/>
+                            <field name="cl_date"/>
+                            <field name="cl_date_done"/>
+                            <field name="cl_weight"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Costs">
+                            <field name="cl_expected_cost" invisible="state == 'error'"/>
+                            <field name="cl_customer_charge"/>
+                            <field name="cl_has_actual_cost" readonly="cl_is_locked"/>
+                            <field name="cl_actual_cost" readonly="cl_is_locked" invisible="not cl_has_actual_cost"/>
+                            <field name="cl_variance" invisible="not cl_has_actual_cost or state == 'error'"/>
+                            <field name="cl_margin" invisible="not cl_has_actual_cost"/>
+                            <field name="cl_expected_margin" invisible="state == 'error'"/>
+                            <field name="cl_is_overrun" invisible="not cl_has_actual_cost"/>
+                            <field name="cl_is_locked" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes" name="notes">
+                            <field name="cl_notes" readonly="cl_is_locked" placeholder="Bill number, remarks from the courier..."/>
+                        </page>
+                        <page string="Calculation" name="calculation">
+                            <group>
+                                <field name="cl_formula_id"/>
+                                <field name="cl_formula_expression" class="font-monospace"/>
+                                <field name="cl_variable_values" class="font-monospace"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_view_pivot" model="ir.ui.view">
+        <field name="name">cl.courier.cost.pivot</field>
+        <field name="model">cl.courier.cost</field>
+        <field name="arch" type="xml">
+            <pivot string="Courier Costs" sample="1">
+                <field name="cl_carrier_id" type="row"/>
+                <field name="cl_date" interval="month" type="col"/>
+                <field name="cl_expected_cost" type="measure"/>
+                <field name="cl_billed_expected_cost" type="measure"/>
+                <field name="cl_actual_cost" type="measure"/>
+                <field name="cl_variance" type="measure"/>
+                <field name="cl_customer_charge" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_view_graph" model="ir.ui.view">
+        <field name="name">cl.courier.cost.graph</field>
+        <field name="model">cl.courier.cost</field>
+        <field name="arch" type="xml">
+            <graph string="Courier Costs" type="bar" sample="1">
+                <field name="cl_date" interval="month"/>
+                <field name="cl_carrier_id"/>
+                <field name="cl_expected_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_view_search" model="ir.ui.view">
+        <field name="name">cl.courier.cost.search</field>
+        <field name="model">cl.courier.cost</field>
+        <field name="arch" type="xml">
+            <search string="Courier Costs">
+                <field name="name"/>
+                <field name="cl_partner_id"/>
+                <field name="cl_carrier_id"/>
+                <field name="cl_sale_id"/>
+                <filter name="no_actual_cost" string="No Actual Cost Yet" domain="[('cl_has_actual_cost', '=', False)]"/>
+                <filter name="billed" string="Actual Cost Entered" domain="[('cl_has_actual_cost', '=', True)]"/>
+                <separator/>
+                <filter name="overrun" string="Billed Above Estimate" domain="[('cl_is_overrun', '=', True)]"/>
+                <filter name="error" string="Error" domain="[('state', '=', 'error')]"/>
+                <filter name="locked" string="Locked" domain="[('cl_is_locked', '=', True)]"/>
+                <filter name="unlocked" string="Not Locked" domain="[('cl_is_locked', '=', False)]"/>
+                <separator/>
+                <filter name="filter_cl_date" string="Delivery Date" date="cl_date"/>
+                <group>
+                    <filter name="group_carrier" string="Carrier" context="{'group_by': 'cl_carrier_id'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'cl_date:month'}"/>
+                    <filter name="group_partner" string="Customer" context="{'group_by': 'cl_partner_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_action" model="ir.actions.act_window">
+        <field name="name">Courier Costs</field>
+        <field name="res_model">cl.courier.cost</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="cl_courier_cost_view_search"/>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No courier costs yet</p>
+            <p>A line is recorded when a delivery order is validated with a delivery method that has a
+               courier cost formula.</p>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_action_pivot" model="ir.actions.act_window">
+        <field name="name">Courier Cost Analysis</field>
+        <field name="res_model">cl.courier.cost</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="search_view_id" ref="cl_courier_cost_view_search"/>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <!-- Action menu of the list: recompute many logs at once, e.g. the deliveries
+         left in "Error" while a formula was in draft. -->
+    <record id="cl_courier_cost_action_server_recompute" model="ir.actions.server">
+        <field name="name">Recompute Expected Cost</field>
+        <field name="model_id" ref="model_cl_courier_cost"/>
+        <field name="binding_model_id" ref="model_cl_courier_cost"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('cl_courier_cost.group_cl_courier_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_cl_recompute()
+        </field>
+    </record>
+</odoo>

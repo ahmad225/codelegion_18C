@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_credit_approval_request_salesman,cl.credit.approval.request salesman,model_cl_credit_approval_request,sales_team.group_sale_salesman,1,1,1,1
+access_cl_credit_reject_manager,cl.credit.reject credit manager,model_cl_credit_reject,cl_credit_control.group_cl_credit_manager,1,1,1,1

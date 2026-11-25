@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo noupdate="1">
+    <!-- noupdate: the time of day and frequency chosen by the customer survive upgrades -->
+    <record id="ir_cron_cl_low_stock_notify" model="ir.cron">
+        <field name="name">Low Stock Alerts: daily e-mail</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cl_low_stock_notify()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

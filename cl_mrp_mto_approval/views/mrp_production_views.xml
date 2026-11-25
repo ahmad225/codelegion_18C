@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="mrp_production_form_view_cl_mto_approval" model="ir.ui.view">
+        <field name="name">mrp.production.form.cl.mto.approval</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='show_lock']" position="after">
+                <button name="action_cl_approve" type="object" string="Approve" class="btn-primary"
+                        invisible="cl_approval_state not in ('pending', 'rejected') or state in ('done', 'cancel')"
+                        groups="cl_mrp_mto_approval.group_cl_mto_coordinator,base.group_system"/>
+                <button name="action_cl_reject" type="object" string="Reject"
+                        invisible="cl_approval_state != 'pending' or state in ('done', 'cancel')"
+                        groups="cl_mrp_mto_approval.group_cl_mto_coordinator,base.group_system"/>
+                <button name="action_cl_request_approval" type="object" string="Request Approval Again"
+                        invisible="cl_approval_state != 'rejected' or state in ('done', 'cancel')"
+                        groups="mrp.group_mrp_user"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="cl_approval_state != 'pending' or state in ('done', 'cancel')">
+                    <strong>Waiting approval:</strong> this order was created from sales order
+                    <field name="cl_mto_sale_order_id" readonly="1" class="oe_inline"/>.
+                    A Manufacturing Coordinator must approve it before it can be planned, started or produced.
+                </div>
+                <div class="alert alert-danger mb-0" role="alert"
+                     invisible="cl_approval_state != 'rejected' or state in ('done', 'cancel')">
+                    <strong>Rejected:</strong> <field name="cl_rejection_reason" class="oe_inline"/>
+                    It cannot be produced until a coordinator approves it.
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="after">
+                <widget name="web_ribbon" title="Waiting Approval" bg_color="text-bg-warning"
+                        invisible="cl_approval_state != 'pending' or state in ('done', 'cancel')"/>
+                <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
+                        invisible="cl_approval_state != 'rejected' or state in ('done', 'cancel')"/>
+            </xpath>
+            <xpath expr="//group[@name='group_extra_info']" position="inside">
+                <field name="cl_mto_sale_order_id" invisible="not cl_mto_sale_order_id or cl_approval_state == 'pending'"/>
+                <field name="cl_approval_state" invisible="cl_approval_state == 'none'"/>
+                <field name="cl_approval_parent_id" invisible="not cl_approval_parent_id"/>
+                <field name="cl_approval_user_id" invisible="not cl_approval_user_id"/>
+                <field name="cl_approval_date" invisible="not cl_approval_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_tree_view_cl_mto_approval" model="ir.ui.view">
+        <field name="name">mrp.production.list.cl.mto.approval</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_cl_approve" type="object" string="Approve"
+                        groups="cl_mrp_mto_approval.group_cl_mto_coordinator,base.group_system"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="cl_mto_sale_order_id" optional="hide"/>
+                <field name="cl_approval_state" string="MTO Approval" widget="badge" optional="show"
+                       invisible="cl_approval_state == 'none'"
+                       decoration-warning="cl_approval_state == 'pending'"
+                       decoration-success="cl_approval_state == 'approved'"
+                       decoration-danger="cl_approval_state == 'rejected'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_production_filter_cl_mto_approval" model="ir.ui.view">
+        <field name="name">mrp.production.search.cl.mto.approval</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_to_close']" position="after">
+                <separator/>
+                <filter string="Waiting Approval" name="cl_waiting_approval"
+                        domain="[('cl_approval_state', '=', 'pending'), ('state', 'not in', ('done', 'cancel'))]"/>
+                <filter string="Approval Rejected" name="cl_approval_rejected"
+                        domain="[('cl_approval_state', '=', 'rejected'), ('state', 'not in', ('done', 'cancel'))]"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="cl_mto_sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_cl_mto_productions_to_approve" model="ir.actions.act_window">
+        <field name="name">Manufacturing Orders to Approve</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">list,form,activity</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="domain">[('cl_approval_state', '=', 'pending'), ('state', 'not in', ('done', 'cancel'))]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No manufacturing order is waiting for approval.</p>
+            <p>Manufacturing orders created from confirmed sales orders (make-to-order) appear here until a coordinator approves them.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cl_mto_productions_to_approve"
+              name="To Approve"
+              parent="mrp.menu_mrp_manufacturing"
+              action="action_cl_mto_productions_to_approve"
+              groups="cl_mrp_mto_approval.group_cl_mto_coordinator,base.group_system"
+              sequence="2"/>
+</odoo>

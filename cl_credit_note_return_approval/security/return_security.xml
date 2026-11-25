@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Own category: a group added to an existing application category would
+         break the role selector of that application on the user form. -->
+    <record id="module_category_cl_goods_return" model="ir.module.category">
+        <field name="name">Customer Returns</field>
+        <field name="description">Who may authorise goods coming back for a credit note.</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="group_cl_return_approver" model="res.groups">
+        <field name="name">Return Approver</field>
+        <field name="category_id" ref="module_category_cl_goods_return"/>
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="comment">Approves or rejects the return requests made for customer credit notes. Approving creates the return transfers.</field>
+    </record>
+
+    <data noupdate="1">
+        <record id="credit_reason_company_rule" model="ir.rule">
+            <field name="name">Credit note reasons: shared or own companies</field>
+            <field name="model_id" ref="model_cl_credit_note_reason"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="return_request_company_rule" model="ir.rule">
+            <field name="name">Return requests: own companies</field>
+            <field name="model_id" ref="model_cl_return_request"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="return_request_line_company_rule" model="ir.rule">
+            <field name="name">Return request lines: own companies</field>
+            <field name="model_id" ref="model_cl_return_request_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="return_analysis_company_rule" model="ir.rule">
+            <field name="name">Returned goods analysis: own companies</field>
+            <field name="model_id" ref="model_cl_return_analysis"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- noupdate: edits to the wording survive module upgrades. -->
+    <data noupdate="1">
+        <record id="mail_template_customer_statement" model="mail.template">
+            <field name="name">Customer Statement (Code Legion)</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">{{ ctx.get('cl_company_name') or user.company_id.name }} - {{ ctx.get('cl_type_label') or 'Statement' }}</field>
+            <field name="email_from">{{ ctx.get('cl_email_from') or user.email_formatted }}</field>
+            <field name="partner_to">{{ object.id }}</field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;">
+    <p style="font-size:15px;margin:0 0 14px;">Dear <t t-out="object.name or ''"/>,</p>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 14px;">
+        Please find attached your <t t-out="ctx.get('cl_type_label') or 'statement'"/>
+        (<t t-out="ctx.get('cl_period') or ''"/>).
+    </p>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 14px;">
+        If anything on the statement does not match your records, simply reply to this
+        email and we will look into it.
+    </p>
+    <p style="font-size:15px;margin:0;">
+        Kind regards,<br/>
+        <strong t-out="ctx.get('cl_company_name') or user.company_id.name"/>
+    </p>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- One switch in the Purchase settings; its two options appear under it
+         once it is on (standard Odoo layout for a setting with sub-options). -->
+    <record id="res_config_settings_view_form_cl_last_po_price" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.last.po.price</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='purchase']" position="inside">
+                <block title="Last Purchase Price" name="cl_last_po_price_block">
+                    <setting id="cl_last_po_price_setting" company_dependent="1"
+                             help="Start new order lines from the price and discount of the product's most recently confirmed purchase order.">
+                        <field name="cl_last_po_price"/>
+                        <div class="content-group" invisible="not cl_last_po_price">
+                            <div class="row mt16">
+                                <label for="cl_last_po_price_vendor" class="col-lg-4 o_light_label"/>
+                                <field name="cl_last_po_price_vendor"
+                                       required="cl_last_po_price"/>
+                            </div>
+                            <div class="row">
+                                <label for="cl_last_po_price_products" class="col-lg-4 o_light_label"/>
+                                <field name="cl_last_po_price_products"
+                                       required="cl_last_po_price"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

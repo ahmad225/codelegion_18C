@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_sale_suspend_wizard,cl.sale.suspend.wizard,model_cl_sale_suspend_wizard,group_cl_sale_suspension,1,1,1,1

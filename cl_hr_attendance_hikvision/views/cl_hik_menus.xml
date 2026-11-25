@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Attendances > Configuration is a plain menu opening the settings in hr_attendance.
+         Once it has sub-menus the web client opens it as a dropdown, so the settings get
+         their own entry first. -->
+    <menuitem id="cl_hik_menu_attendance_settings" name="Settings"
+              parent="hr_attendance.menu_hr_attendance_settings"
+              action="hr_attendance.action_hr_attendance_settings"
+              sequence="1" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <menuitem id="cl_hik_menu_devices" name="Hikvision Devices"
+              parent="hr_attendance.menu_hr_attendance_settings"
+              action="cl_hik_device_action"
+              sequence="20" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <menuitem id="cl_hik_menu_punches" name="Hikvision Punches"
+              parent="hr_attendance.menu_hr_attendance_root"
+              action="cl_hik_punch_action"
+              sequence="12" groups="hr_attendance.group_hr_attendance_officer"/>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_picking_form_cl_photo_proof" model="ir.ui.view">
+        <field name="name">stock.picking.form.cl.photo.proof</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']" position="before">
+                <field name="cl_require_photo_proof" invisible="1"/>
+                <div class="alert alert-info mb-2" role="status"
+                     invisible="not cl_require_photo_proof or state in ('done', 'cancel')">
+                    Add at least one photo or PDF (camera button) to every product you process
+                    before validating. Lines left at zero do not need one.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/list/field[@name='picked']" position="after">
+                <field name="cl_proof_count" string="Proofs"
+                       column_invisible="not parent.cl_require_photo_proof"
+                       decoration-danger="cl_proof_count == 0 and quantity &gt; 0 and state not in ('done', 'cancel')"/>
+                <button name="action_cl_open_photo_proof" type="object" icon="fa-camera" title="Photo Proof"
+                        column_invisible="not parent.cl_require_photo_proof"
+                        invisible="state == 'cancel'"
+                        groups="stock.group_stock_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

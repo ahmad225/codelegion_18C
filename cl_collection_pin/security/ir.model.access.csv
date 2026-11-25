@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_collection_pin_log_stock_user,cl.collection.pin.log.stock.user,model_cl_collection_pin_log,stock.group_stock_user,1,0,0,0
+access_cl_collection_pin_log_salesman,cl.collection.pin.log.salesman,model_cl_collection_pin_log,sales_team.group_sale_salesman,1,0,0,0
+access_cl_collection_pin_verify_stock_user,cl.collection.pin.verify.stock.user,model_cl_collection_pin_verify,stock.group_stock_user,1,1,1,0

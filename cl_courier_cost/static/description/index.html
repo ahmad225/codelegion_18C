@@ -1,0 +1,73 @@
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;max-width:980px;margin:0 auto;line-height:1.6;">
+
+  <div style="text-align:center;">
+    <img src="banner.png" alt="Courier Cost Control" style="width:100%;height:auto;border-radius:12px;"/>
+  </div>
+
+  <div style="text-align:center;padding:36px 24px 8px;">
+    <h1 style="font-size:34px;color:#1F3864;margin:0 0 12px;">Know what every shipment really costs</h1>
+    <p style="font-size:18px;color:#555;max-width:720px;margin:0 auto;">Work out the expected courier cost of every delivery and check it against what the courier bills.</p>
+  </div>
+
+  <div style="background:#F4F6FB;border-radius:12px;padding:28px 32px;margin:32px 0;">
+    <p style="font-size:17px;margin:0;color:#333;">Build a cost formula for each delivery method from weight, volume, packages and your fixed rates. Every validated delivery gets a cost log with the expected cost and its share of what the customer paid for shipping. Send the sheet to your courier, import their actual charges and see the difference.</p>
+  </div>
+
+  <h2 style="font-size:26px;color:#1F3864;text-align:center;margin:40px 0 8px;">What it does</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:16px;">
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128290; Cost formulas</h3>
+        <p style="margin:0;color:#555;">Combine fixed rates and delivery values with + - * /, min, max, round, ceil, floor and iif, checked before they are used.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128230; Log per delivery</h3>
+        <p style="margin:0;color:#555;">The expected cost, the values used and the customer charge are recorded when the delivery is validated.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128176; Preview on orders</h3>
+        <p style="margin:0;color:#555;">The sales order shows the expected courier cost of the chosen delivery method to your courier cost team.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128196; Vendor sheet</h3>
+        <p style="margin:0;color:#555;">Export an Excel sheet for your courier, let them fill in the actual cost and import it back.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128202; Variance report</h3>
+        <p style="margin:0;color:#555;">Compare expected and actual cost and see the margin per delivery, by carrier and by month.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128274; Locked once billed</h3>
+        <p style="margin:0;color:#555;">Actual costs are locked when imported or confirmed, and only a manager can unlock them.</p>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#1F3864;color:#fff;border-radius:12px;padding:28px 32px;margin:36px 0;">
+    <h2 style="font-size:22px;margin:0 0 14px;color:#fff;">Built to behave well</h2>
+    <ul style="margin:0;padding-left:20px;font-size:16px;">
+      <li>A formula problem never blocks a delivery: the log records the reason and the delivery is validated anyway.</li>
+      <li>Blank rows in the vendor sheet are skipped, never saved as zero; amounts are read in both notations (1,234.50 and 1.234,50) and anything unclear is reported, not imported.</li>
+      <li>Variance and margin appear only once the courier's cost is known, so unbilled deliveries never count as profit.</li>
+      <li>The customer's shipping charge is shared across the deliveries of an order, so split orders are counted once.</li>
+      <li>It creates no accounting entries and never changes what the customer pays.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:#666;font-size:15px;margin:36px 0 0;">
+    Odoo 18.0 &bull; Community &amp; Enterprise &bull; depends on Sales, Inventory and Delivery &bull; Licence LGPL-3
+  </p>
+
+  <div style="text-align:center;border-top:1px solid #E3E8F0;margin-top:28px;padding-top:24px;">
+    <h3 style="color:#1F3864;margin:0 0 6px;">Code Legion</h3>
+    <p style="color:#666;margin:0;">Odoo implementation and development.
+      <a href="https://thecodelegion.com" style="color:#2E5090;">thecodelegion.com</a>
+    </p>
+  </div>
+
+</section>

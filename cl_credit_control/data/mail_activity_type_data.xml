@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo noupdate="1">
+    <record id="mail_activity_type_credit_approval" model="mail.activity.type">
+        <field name="name">Credit Approval</field>
+        <field name="summary">Approve or reject the credit request</field>
+        <field name="icon">fa-credit-card</field>
+        <field name="res_model">sale.order</field>
+        <field name="delay_count">0</field>
+        <field name="sequence">90</field>
+    </record>
+</odoo>

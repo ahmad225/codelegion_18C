@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Ageing table, shared by both statements and the portal -->
+    <template id="cl_statement_ageing_table">
+        <table class="table table-sm table-bordered mt-3 mb-0" style="font-size: 12px;">
+            <thead>
+                <tr>
+                    <t t-foreach="ageing_buckets" t-as="bucket">
+                        <th class="text-end" t-out="bucket[1]"/>
+                    </t>
+                    <th class="text-end">Total Open</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <t t-foreach="ageing_buckets" t-as="bucket">
+                        <td class="text-end">
+                            <span t-out="ageing[bucket[0]]" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        </td>
+                    </t>
+                    <td class="text-end fw-bold">
+                        <span t-out="ageing['total']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- Account statement body -->
+    <template id="cl_statement_account_body">
+        <h3 class="mb-1">Statement of Account</h3>
+        <p class="text-muted mb-3">
+            Period <span t-out="st['date_from']" t-options="{'widget': 'date'}"/> to
+            <span t-out="st['date_to']" t-options="{'widget': 'date'}"/>
+        </p>
+        <table class="table table-sm" style="font-size: 12px;">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Number</th>
+                    <th>Reference</th>
+                    <th>Due Date</th>
+                    <th class="text-end">Debit</th>
+                    <th class="text-end">Credit</th>
+                    <th class="text-end">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="fw-bold">
+                    <td colspan="7">Opening balance</td>
+                    <td class="text-end"><span t-out="st['opening']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                </tr>
+                <tr t-foreach="st['rows']" t-as="row">
+                    <td><span t-out="row['date']" t-options="{'widget': 'date'}"/></td>
+                    <td t-out="row['type']"/>
+                    <td t-out="row['name']"/>
+                    <td t-out="row['ref']"/>
+                    <td><span t-if="row['due']" t-out="row['due']" t-options="{'widget': 'date'}"/></td>
+                    <td class="text-end"><span t-if="row['debit']" t-out="row['debit']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                    <td class="text-end"><span t-if="row['credit']" t-out="row['credit']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                    <td class="text-end"><span t-out="row['balance']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                </tr>
+                <tr t-if="not st['rows']">
+                    <td colspan="8" class="text-muted">No transactions in this period.</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="5">Closing balance</td>
+                    <td class="text-end"><span t-out="st['total_debit']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                    <td class="text-end"><span t-out="st['total_credit']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                    <td class="text-end"><span t-out="st['closing']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+        <h5 class="mt-4 mb-1">Ageing of open items</h5>
+        <p class="text-muted mb-0" style="font-size: 12px;">
+            As of <span t-out="st['ageing']['as_of']" t-options="{'widget': 'date'}"/>, by due date.
+        </p>
+        <t t-call="cl_customer_statement.cl_statement_ageing_table">
+            <t t-set="ageing" t-value="st['ageing']"/>
+            <t t-set="currency" t-value="st['currency']"/>
+        </t>
+    </template>
+
+    <!-- Overdue statement body -->
+    <template id="cl_statement_overdue_body">
+        <h3 class="mb-1">Overdue Statement</h3>
+        <p class="text-muted mb-3">
+            As of <span t-out="st['date_to']" t-options="{'widget': 'date'}"/>
+        </p>
+        <table class="table table-sm" style="font-size: 12px;">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Reference</th>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                    <th class="text-end">Days Overdue</th>
+                    <th class="text-end">Original</th>
+                    <th class="text-end">Open</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="st['rows']" t-as="row">
+                    <td t-out="row['name']"/>
+                    <td t-out="row['ref']"/>
+                    <td><span t-out="row['date']" t-options="{'widget': 'date'}"/></td>
+                    <td><span t-out="row['due']" t-options="{'widget': 'date'}"/></td>
+                    <td class="text-end" t-out="row['days']"/>
+                    <td class="text-end"><span t-out="row['original']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                    <td class="text-end"><span t-out="row['open']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                </tr>
+                <tr t-if="not st['rows']">
+                    <td colspan="7" class="text-muted">Nothing is overdue. Thank you!</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="6">Total overdue</td>
+                    <td class="text-end"><span t-out="st['total']" t-options="{'widget': 'monetary', 'display_currency': st['currency']}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+        <h5 class="mt-4 mb-1">Ageing of open items</h5>
+        <t t-call="cl_customer_statement.cl_statement_ageing_table">
+            <t t-set="ageing" t-value="st['ageing']"/>
+            <t t-set="currency" t-value="st['currency']"/>
+        </t>
+    </template>
+
+    <!-- PDF report -->
+    <template id="report_customer_statement_document">
+        <t t-set="o" t-value="st['partner'].with_context(lang=st['lang'])"/>
+        <t t-call="web.external_layout">
+            <t t-set="address">
+                <div t-out="o" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+            </t>
+            <div class="page">
+                <t t-if="st['type'] == 'overdue'">
+                    <t t-call="cl_customer_statement.cl_statement_overdue_body"/>
+                </t>
+                <t t-else="">
+                    <t t-call="cl_customer_statement.cl_statement_account_body"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_customer_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="statements" t-as="st">
+                <!-- headings and column titles in the customer's language -->
+                <t t-call="cl_customer_statement.report_customer_statement_document" t-lang="st['lang']"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_customer_statement" model="ir.actions.report">
+        <field name="name">Customer Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cl_customer_statement.report_customer_statement</field>
+        <field name="report_file">cl_customer_statement.report_customer_statement</field>
+        <field name="print_report_name">'Statement - %s' % (object.name)</field>
+    </record>
+</odoo>

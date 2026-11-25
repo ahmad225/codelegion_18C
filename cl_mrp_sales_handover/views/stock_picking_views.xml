@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_picking_form_cl_handover" model="ir.ui.view">
+        <field name="name">stock.picking.form.cl.handover</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='other_infos']" position="after">
+                <group string="Customer Collection" name="cl_collection" invisible="not cl_collection_ready_sent">
+                    <field name="cl_collection_ready_sent"/>
+                    <field name="cl_collection_reminder_count"/>
+                    <field name="cl_collection_next_reminder" invisible="not cl_collection_next_reminder"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search_cl_handover" model="ir.ui.view">
+        <field name="name">stock.picking.search.cl.handover</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='available']" position="after">
+                <filter string="Waiting for Collection" name="cl_waiting_collection"
+                        domain="[('cl_collection_ready_sent', '!=', False), ('state', 'not in', ('done', 'cancel'))]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

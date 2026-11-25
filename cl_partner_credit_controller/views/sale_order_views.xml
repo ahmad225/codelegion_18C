@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_order_form_cl_credit_controller" model="ir.ui.view">
+        <field name="name">sale.order.form.cl.credit.controller</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sales_person']/field[@name='user_id']" position="after">
+                <field name="cl_credit_controller_id" widget="many2one_avatar_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_cl_credit_controller" model="ir.ui.view">
+        <field name="name">sale.order.search.cl.credit.controller</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="cl_credit_controller_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='salesperson']" position="after">
+                <filter string="Credit Controller" name="cl_group_credit_controller"
+                        context="{'group_by': 'cl_credit_controller_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

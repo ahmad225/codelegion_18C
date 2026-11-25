@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_hik_punch_view_list" model="ir.ui.view">
+        <field name="name">cl.hik.punch.list</field>
+        <field name="model">cl.hik.punch</field>
+        <field name="arch" type="xml">
+            <list string="Hikvision Punches" create="0" edit="0" delete="0"
+                  decoration-danger="state == 'review'"
+                  decoration-warning="state == 'unmapped'"
+                  decoration-muted="state == 'duplicate'">
+                <header>
+                    <button name="action_cl_retry" type="object" string="Process Again"
+                            groups="hr_attendance.group_hr_attendance_manager"/>
+                </header>
+                <field name="timestamp"/>
+                <field name="device_id"/>
+                <field name="hik_user_id"/>
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'processed'"
+                       decoration-warning="state == 'unmapped'"
+                       decoration-danger="state == 'review'"
+                       decoration-info="state == 'new'"/>
+                <field name="role" optional="show"/>
+                <field name="attendance_id" optional="show"/>
+                <field name="note" optional="show"/>
+                <field name="raw_type" optional="hide"/>
+                <field name="serial_no" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_hik_punch_view_form" model="ir.ui.view">
+        <field name="name">cl.hik.punch.form</field>
+        <field name="model">cl.hik.punch</field>
+        <field name="arch" type="xml">
+            <form string="Hikvision Punch" create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group string="Punch" name="punch">
+                            <field name="timestamp"/>
+                            <field name="device_id"/>
+                            <field name="hik_user_id"/>
+                            <field name="employee_id"/>
+                            <field name="raw_type"/>
+                            <field name="serial_no"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Result" name="result">
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'processed'"
+                                   decoration-warning="state == 'unmapped'"
+                                   decoration-danger="state == 'review'"
+                                   decoration-info="state == 'new'"/>
+                            <field name="role"/>
+                            <field name="attendance_id"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_hik_punch_view_search" model="ir.ui.view">
+        <field name="name">cl.hik.punch.search</field>
+        <field name="model">cl.hik.punch</field>
+        <field name="arch" type="xml">
+            <search string="Hikvision Punches">
+                <field name="employee_id"/>
+                <field name="hik_user_id"/>
+                <field name="device_id"/>
+                <filter string="Not Mapped" name="cl_unmapped" domain="[('state', '=', 'unmapped')]"/>
+                <filter string="To Review" name="cl_review" domain="[('state', '=', 'review')]"/>
+                <filter string="Double Swipes" name="cl_duplicate" domain="[('state', '=', 'duplicate')]"/>
+                <filter string="Processed" name="cl_processed" domain="[('state', '=', 'processed')]"/>
+                <separator/>
+                <filter string="Today" name="cl_today"
+                        domain="[('timestamp', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter string="Yesterday" name="cl_yesterday"
+                        domain="[('timestamp', '&gt;=', datetime.datetime.combine(context_today() - relativedelta(days=1), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S')),
+                                 ('timestamp', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter string="Punch Time" name="cl_timestamp" date="timestamp"/>
+                <group expand="0" string="Group By">
+                    <filter string="Device" name="group_device" context="{'group_by': 'device_id'}"/>
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Device User ID" name="group_hik_user" context="{'group_by': 'hik_user_id'}"/>
+                    <filter string="Result" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Day" name="group_day" context="{'group_by': 'timestamp:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_hik_punch_action" model="ir.actions.act_window">
+        <field name="name">Hikvision Punches</field>
+        <field name="res_model">cl.hik.punch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="cl_hik_punch_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No punches downloaded yet</p>
+            <p>Punches appear here once a Hikvision device is connected (Configuration > Hikvision Devices).</p>
+        </field>
+    </record>
+</odoo>

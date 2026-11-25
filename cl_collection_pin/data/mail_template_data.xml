@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <!-- noupdate: edits to the wording survive module upgrades.
+         The PIN is only given to the template through the context
+         (ctx['cl_collection_pin']) when the module sends it: it is never read
+         from the order. Keep it out of the subject. -->
+    <data noupdate="1">
+        <record id="mail_template_collection_pin" model="mail.template">
+            <field name="name">Click &amp; Collect: Collection PIN</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} - your collection PIN for {{ object.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="description">Sent automatically with the collection PIN of click &amp; collect orders.</field>
+            <field name="body_html" type="html">
+<div style="margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;">
+    <p style="font-size:15px;margin:0 0 14px;">Dear <t t-out="object.partner_id.name or ''"/>,</p>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 14px;">
+        Your collection PIN for <t t-out="object.name or ''"/> is
+        <strong style="font-size:20px;letter-spacing:3px;" t-out="ctx.get('cl_collection_pin') or ''"/>.
+    </p>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 14px;">
+        Please give this PIN at the counter when you collect your order. Keep it
+        private: anyone with the PIN can collect the order. It can be used once.
+    </p>
+    <p style="font-size:15px;margin:0;">
+        Kind regards,<br/>
+        <strong t-out="object.company_id.name or ''"/>
+    </p>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

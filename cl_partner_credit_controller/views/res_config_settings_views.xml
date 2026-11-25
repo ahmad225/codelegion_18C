@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_credit_controller" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.credit.controller</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                <setting id="cl_print_credit_controller" company_dependent="1"
+                         help="Show the customer's credit controller on the invoice PDF.">
+                    <field name="cl_print_credit_controller"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

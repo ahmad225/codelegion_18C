@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_order_checklist_item_user,cl.order.checklist.item user,model_cl_order_checklist_item,base.group_user,1,0,0,0
+access_cl_order_checklist_item_sale_manager,cl.order.checklist.item sales manager,model_cl_order_checklist_item,sales_team.group_sale_manager,1,1,1,1
+access_cl_order_checklist_item_mrp_manager,cl.order.checklist.item mrp manager,model_cl_order_checklist_item,mrp.group_mrp_manager,1,1,1,1
+access_cl_order_checklist_line_user,cl.order.checklist.line user,model_cl_order_checklist_line,base.group_user,1,1,0,0

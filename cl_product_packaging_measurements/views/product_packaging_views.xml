@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- List of packagings. Odoo's editable list inside the product form is a
+         child of this view, so the columns appear there as well. -->
+    <record id="product_packaging_list_inherit_cl_measurements" model="ir.ui.view">
+        <field name="name">product.packaging.list.inherit.cl.measurements</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="cl_length_uom_locked" column_invisible="1"/>
+                <field name="cl_weight_uom_locked" column_invisible="1"/>
+                <field name="cl_length" optional="show"/>
+                <field name="cl_width" optional="show"/>
+                <field name="cl_height" optional="show"/>
+                <field name="cl_length_uom_id" optional="show"
+                       readonly="cl_length_uom_locked"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="cl_gross_weight" optional="show"/>
+                <field name="cl_weight_uom_id" optional="show"
+                       readonly="cl_weight_uom_locked"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="cl_dimensions" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_packaging_form_inherit_cl_measurements" model="ir.ui.view">
+        <field name="name">product.packaging.form.inherit.cl.measurements</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group name="cl_measurements" string="Measurements">
+                    <group name="cl_size">
+                        <field name="cl_length_uom_locked" invisible="1"/>
+                        <field name="cl_length"/>
+                        <field name="cl_width"/>
+                        <field name="cl_height"/>
+                        <field name="cl_length_uom_id"
+                               readonly="cl_length_uom_locked"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group name="cl_weight">
+                        <field name="cl_weight_uom_locked" invisible="1"/>
+                        <field name="cl_gross_weight"/>
+                        <field name="cl_weight_uom_id"
+                               readonly="cl_weight_uom_locked"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="cl_dimensions" invisible="not cl_dimensions"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

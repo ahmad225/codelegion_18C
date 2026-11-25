@@ -1,0 +1,73 @@
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;max-width:980px;margin:0 auto;line-height:1.6;">
+
+  <div style="text-align:center;">
+    <img src="banner.png" alt="Delete Confirmed Purchase Lines" style="width:100%;height:auto;border-radius:12px;"/>
+  </div>
+
+  <div style="text-align:center;padding:36px 24px 8px;">
+    <h1 style="font-size:34px;color:#1F3864;margin:0 0 12px;">Drop one line, keep the order</h1>
+    <p style="font-size:18px;color:#555;max-width:720px;margin:0 auto;">Lets authorised buyers delete a line from a confirmed purchase order, with the receipt updated and the change logged.</p>
+  </div>
+
+  <div style="background:#F4F6FB;border-radius:12px;padding:28px 32px;margin:32px 0;">
+    <p style="font-size:17px;margin:0;color:#333;">The vendor cannot supply one item? Instead of cancelling the whole order, an authorised buyer deletes that line from the confirmed order. The receipt stops expecting those goods, and a note on the order and on the receipt records what was removed and by whom.</p>
+  </div>
+
+  <h2 style="font-size:26px;color:#1F3864;text-align:center;margin:40px 0 8px;">What it does</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:16px;">
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128273; Authorised users only</h3>
+        <p style="margin:0;color:#555;">Only members of a dedicated access group can delete a line; everyone else keeps Odoo's standard refusal.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128230; Receipt updated</h3>
+        <p style="margin:0;color:#555;">The goods still expected for that line are cancelled on the receipt, and the receipt itself is cancelled when nothing else is due.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128274; Protected lines</h3>
+        <p style="margin:0;color:#555;">A line with goods received, even if returned since, or already on a vendor bill cannot be deleted.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128221; Fully logged</h3>
+        <p style="margin:0;color:#555;">A note on the purchase order and on each open receipt lists what was removed, signed by the user who did it.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128172; Clear refusals</h3>
+        <p style="margin:0;color:#555;">When some lines cannot be deleted, one message lists each of them with the reason.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128683; No product swaps</h3>
+        <p style="margin:0;color:#555;">The product on a line cannot be changed once goods have been received for it.</p>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#1F3864;color:#fff;border-radius:12px;padding:28px 32px;margin:36px 0;">
+    <h2 style="font-size:22px;margin:0 0 14px;color:#fff;">Built to behave well</h2>
+    <ul style="margin:0;padding-left:20px;font-size:16px;">
+      <li>Received or billed lines are protected, so stock and accounting stay correct.</li>
+      <li>Locked orders stay locked: the order has to be unlocked before a line can be deleted.</li>
+      <li>Draft orders and note or section lines behave exactly as in standard Odoo.</li>
+      <li>The dates and prices of the other lines are never touched.</li>
+      <li>The log notes send no email, so they also work for users without an email address.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:#666;font-size:15px;margin:36px 0 0;">
+    Odoo 18.0 &bull; Community &amp; Enterprise &bull; depends on Purchase and Inventory &bull; Licence LGPL-3
+  </p>
+
+  <div style="text-align:center;border-top:1px solid #E3E8F0;margin-top:28px;padding-top:24px;">
+    <h3 style="color:#1F3864;margin:0 0 6px;">Code Legion</h3>
+    <p style="color:#666;margin:0;">Odoo implementation and development.
+      <a href="https://thecodelegion.com" style="color:#2E5090;">thecodelegion.com</a>
+    </p>
+  </div>
+
+</section>

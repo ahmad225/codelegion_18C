@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_hik_device_view_form" model="ir.ui.view">
+        <field name="name">cl.hik.device.form</field>
+        <field name="model">cl.hik.device</field>
+        <field name="arch" type="xml">
+            <form string="Hikvision Device">
+                <header>
+                    <button name="action_cl_test_connection" type="object" string="Test Connection"
+                            class="btn-primary" groups="hr_attendance.group_hr_attendance_manager"/>
+                    <button name="action_cl_sync_now" type="object" string="Sync Now"
+                            groups="hr_attendance.group_hr_attendance_manager" invisible="not active"/>
+                    <button name="action_cl_reprocess_unmapped" type="object" string="Reprocess Unmapped"
+                            groups="hr_attendance.group_hr_attendance_manager" invisible="not unmapped_count"/>
+                    <button name="action_cl_set_password" type="object" string="Set Password"
+                            groups="hr_attendance.group_hr_attendance_manager"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_cl_open_punches" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="punch_count" widget="statinfo" string="Punches"/>
+                        </button>
+                        <button name="action_cl_open_unmapped" type="object" class="oe_stat_button"
+                                icon="fa-user-times" invisible="not unmapped_count">
+                            <field name="unmapped_count" widget="statinfo" string="Not Mapped"/>
+                        </button>
+                        <button name="action_cl_open_review" type="object" class="oe_stat_button"
+                                icon="fa-exclamation-triangle" invisible="not review_count">
+                            <field name="review_count" widget="statinfo" string="To Review"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Main Entrance"/></h1>
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="state != 'error'">
+                        <strong>Last error: </strong><field name="last_error" class="d-inline"/>
+                        <div invisible="not login_refused">
+                            Automatic downloads are paused until the login works again (Set Password or Test Connection).
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not clock_warning">
+                        <field name="clock_note" class="d-inline"/>
+                    </div>
+                    <group>
+                        <group string="Connection" name="connection">
+                            <field name="host" placeholder="192.168.1.64"/>
+                            <field name="port"/>
+                            <field name="use_https"/>
+                            <field name="verify_certificate" invisible="not use_https"/>
+                            <field name="username"/>
+                            <field name="password" password="True" groups="base.group_system"/>
+                            <field name="password_set"/>
+                        </group>
+                        <group string="Status" name="status">
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'connected'"
+                                   decoration-danger="state == 'error'"
+                                   decoration-info="state == 'not_tested'"/>
+                            <field name="last_sync_ok"/>
+                            <field name="last_error_date" invisible="not last_error_date"/>
+                            <field name="downloaded_until"/>
+                            <field name="last_event_time"/>
+                            <field name="login_refused" invisible="1"/>
+                            <field name="clock_warning" invisible="1"/>
+                        </group>
+                        <group string="Settings" name="settings">
+                            <field name="tz"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="sync_from" readonly="downloaded_until"/>
+                            <field name="event_minor_codes" placeholder="e.g. 75, 38, 1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Device" name="device_info">
+                            <field name="device_model"/>
+                            <field name="device_serial"/>
+                            <field name="firmware"/>
+                            <field name="clock_note" invisible="clock_warning or not clock_note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_hik_device_view_list" model="ir.ui.view">
+        <field name="name">cl.hik.device.list</field>
+        <field name="model">cl.hik.device</field>
+        <field name="arch" type="xml">
+            <list string="Hikvision Devices" decoration-danger="state == 'error'" decoration-muted="not active">
+                <field name="name"/>
+                <field name="host"/>
+                <field name="port" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="tz" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'connected'"
+                       decoration-danger="state == 'error'"
+                       decoration-info="state == 'not_tested'"/>
+                <field name="last_sync_ok"/>
+                <field name="downloaded_until" optional="show"/>
+                <field name="last_error" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_hik_device_view_search" model="ir.ui.view">
+        <field name="name">cl.hik.device.search</field>
+        <field name="model">cl.hik.device</field>
+        <field name="arch" type="xml">
+            <search string="Hikvision Devices">
+                <field name="name"/>
+                <field name="host"/>
+                <filter string="In Error" name="cl_error" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_hik_device_action" model="ir.actions.act_window">
+        <field name="name">Hikvision Devices</field>
+        <field name="res_model">cl.hik.device</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="cl_hik_device_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add your first Hikvision device</p>
+            <p>Enter the address of the terminal as reached from the Odoo server, set the password, then
+               Test Connection. Punches are then downloaded automatically.</p>
+        </field>
+    </record>
+</odoo>

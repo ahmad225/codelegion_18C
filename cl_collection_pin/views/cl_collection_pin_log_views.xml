@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <record id="cl_collection_pin_log_view_list" model="ir.ui.view">
+        <field name="name">cl.collection.pin.log.list</field>
+        <field name="model">cl.collection.pin.log</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false"
+                  decoration-danger="cl_event in ('failed', 'locked')"
+                  decoration-success="cl_event == 'verified'"
+                  decoration-muted="cl_event in ('cleared', 'expired')">
+                <field name="cl_date"/>
+                <field name="cl_order_id"/>
+                <field name="cl_partner_id" optional="show"/>
+                <field name="cl_picking_id" optional="show"/>
+                <field name="cl_event" widget="badge"
+                       decoration-success="cl_event == 'verified'"
+                       decoration-danger="cl_event in ('failed', 'locked')"
+                       decoration-info="cl_event in ('issued', 'resent')"/>
+                <field name="cl_attempt" optional="show"/>
+                <field name="cl_user_id" widget="many2one_avatar_user"/>
+                <field name="cl_note"/>
+                <field name="cl_company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_collection_pin_log_view_form" model="ir.ui.view">
+        <field name="name">cl.collection.pin.log.form</field>
+        <field name="model">cl.collection.pin.log</field>
+        <field name="arch" type="xml">
+            <form string="Collection PIN Log" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="cl_order_id"/>
+                            <field name="cl_partner_id"/>
+                            <field name="cl_picking_id"/>
+                            <field name="cl_company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="cl_event"/>
+                            <field name="cl_attempt" invisible="not cl_attempt"/>
+                            <field name="cl_date"/>
+                            <field name="cl_user_id" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="cl_note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_collection_pin_log_view_search" model="ir.ui.view">
+        <field name="name">cl.collection.pin.log.search</field>
+        <field name="model">cl.collection.pin.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cl_order_id"/>
+                <field name="cl_picking_id"/>
+                <field name="cl_partner_id"/>
+                <field name="cl_user_id"/>
+                <filter name="cl_filter_failed" string="Wrong PIN / Locked"
+                        domain="[('cl_event', 'in', ('failed', 'locked'))]"/>
+                <filter name="cl_filter_verified" string="Verified"
+                        domain="[('cl_event', '=', 'verified')]"/>
+                <filter name="cl_filter_issued" string="Issued / Sent"
+                        domain="[('cl_event', 'in', ('issued', 'resent'))]"/>
+                <separator/>
+                <filter name="cl_filter_date" string="Date" date="cl_date"/>
+                <group expand="0" string="Group By">
+                    <filter name="cl_group_order" string="Sales Order" context="{'group_by': 'cl_order_id'}"/>
+                    <filter name="cl_group_event" string="Event" context="{'group_by': 'cl_event'}"/>
+                    <filter name="cl_group_user" string="User" context="{'group_by': 'cl_user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_collection_pin_log_action" model="ir.actions.act_window">
+        <field name="name">Collection PIN Log</field>
+        <field name="res_model">cl.collection.pin.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="cl_collection_pin_log_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No collection PIN events yet</p>
+            <p>Every PIN issued, verified, wrongly entered, locked, cleared or expired
+               for a click &amp; collect order is recorded here. The PIN itself is never stored.</p>
+        </field>
+    </record>
+
+    <menuitem id="cl_menu_collection_pin_log"
+              name="Collection PIN Log"
+              parent="stock.menu_warehouse_report"
+              action="cl_collection_pin_log_action"
+              groups="stock.group_stock_user"
+              sequence="150"/>
+</odoo>

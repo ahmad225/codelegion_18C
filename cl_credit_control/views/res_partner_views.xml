@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Customer form: Sales & Purchase tab, companies and stand-alone contacts only -->
+    <record id="view_partner_form_cl_credit_control" model="ir.ui.view">
+        <field name="name">res.partner.form.cl.credit.control</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="inside">
+                <group string="Credit Control" name="cl_credit_control"
+                       invisible="not is_company and parent_id">
+                    <group name="cl_credit_figures">
+                        <field name="cl_credit_status" widget="badge"
+                               decoration-success="cl_credit_status == 'ok'"
+                               decoration-info="cl_credit_status == 'exempt'"
+                               decoration-warning="cl_credit_status in ('overdue', 'limit')"
+                               decoration-danger="cl_credit_status == 'hold'"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cl_credit_overdue_amount"/>
+                        <field name="cl_credit_overdue_days"/>
+                    </group>
+                    <group name="cl_credit_settings" groups="cl_credit_control.group_cl_credit_manager">
+                        <field name="cl_credit_hold"/>
+                        <field name="cl_credit_exempt"/>
+                        <field name="cl_credit_custom_grace"/>
+                        <field name="cl_credit_grace_days" invisible="not cl_credit_custom_grace"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_cl_credit_control" model="ir.ui.view">
+        <field name="name">res.partner.select.cl.credit.control</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="On Credit Hold" name="cl_credit_hold"
+                        domain="[('cl_credit_hold', '=', True)]"/>
+                <filter string="Overdue Beyond Allowance" name="cl_credit_has_overdue"
+                        domain="[('cl_credit_has_overdue', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

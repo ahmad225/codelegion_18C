@@ -1,0 +1,72 @@
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;max-width:980px;margin:0 auto;line-height:1.6;">
+
+  <div style="text-align:center;">
+    <img src="banner.png" alt="Customer Credit Controller" style="width:100%;height:auto;border-radius:12px;"/>
+  </div>
+
+  <div style="text-align:center;padding:36px 24px 8px;">
+    <h1 style="font-size:34px;color:#1F3864;margin:0 0 12px;">Every customer has someone chasing payment</h1>
+    <p style="font-size:18px;color:#555;max-width:720px;margin:0 auto;">Gives each customer a credit controller, kept the same on all its contacts, sales orders and invoices.</p>
+  </div>
+
+  <div style="background:#F4F6FB;border-radius:12px;padding:28px 32px;margin:32px 0;">
+    <p style="font-size:17px;margin:0;color:#333;">Choose the credit controller on the customer's company, next to the salesperson. Every contact person of that company follows it automatically, and it is shown on the customer's sales orders and invoices. Each controller opens one filter to see the overdue invoices of their own customers.</p>
+  </div>
+
+  <h2 style="font-size:26px;color:#1F3864;text-align:center;margin:40px 0 8px;">What it does</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:16px;">
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128100; Set once per customer</h3>
+        <p style="margin:0;color:#555;">Pick the credit controller on the company and all its contacts, at every level, follow it. New contacts get it at once.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128196; Orders and invoices</h3>
+        <p style="margin:0;color:#555;">The credit controller is shown on sales orders and customer invoices, and you can search and group by it.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128276; Invoices to chase</h3>
+        <p style="margin:0;color:#555;">The My Invoices to Chase filter lists the overdue, unpaid invoices of the controller's own customers.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128101; My credit customers</h3>
+        <p style="margin:0;color:#555;">A filter on contacts shows each controller the customers they look after.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128424; On the invoice PDF</h3>
+        <p style="margin:0;color:#555;">Optionally print the controller's name and e-mail on invoices, so the customer knows who to contact.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128260; Sync for imported data</h3>
+        <p style="margin:0;color:#555;">An action on contacts copies the controller from companies to their contacts, for data loaded from elsewhere.</p>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#1F3864;color:#fff;border-radius:12px;padding:28px 32px;margin:36px 0;">
+    <h2 style="font-size:22px;margin:0 0 14px;color:#fff;">Built to behave well</h2>
+    <ul style="margin:0;padding-left:20px;font-size:16px;">
+      <li>A contact moved to another company takes the credit controller of that company.</li>
+      <li>Only internal users can be credit controllers, and this is checked when you save, not just in the list of choices.</li>
+      <li>Vendor bills are left alone: the field and its filters only appear on customer invoices.</li>
+      <li>Installing on a large database is quick, because nothing is recalculated on existing orders and invoices.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:#666;font-size:15px;margin:36px 0 0;">
+    Odoo 18.0 &bull; Community &amp; Enterprise &bull; depends on Sales and Invoicing &bull; Licence LGPL-3
+  </p>
+
+  <div style="text-align:center;border-top:1px solid #E3E8F0;margin-top:28px;padding-top:24px;">
+    <h3 style="color:#1F3864;margin:0 0 6px;">Code Legion</h3>
+    <p style="color:#666;margin:0;">Odoo implementation and development.
+      <a href="https://thecodelegion.com" style="color:#2E5090;">thecodelegion.com</a>
+    </p>
+  </div>
+
+</section>

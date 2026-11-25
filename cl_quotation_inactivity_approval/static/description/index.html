@@ -1,0 +1,73 @@
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;max-width:980px;margin:0 auto;line-height:1.6;">
+
+  <div style="text-align:center;">
+    <img src="banner.png" alt="Stale Quotation Approval" style="width:100%;height:auto;border-radius:12px;"/>
+  </div>
+
+  <div style="text-align:center;padding:36px 24px 8px;">
+    <h1 style="font-size:34px;color:#1F3864;margin:0 0 12px;">A second look at old quotations</h1>
+    <p style="font-size:18px;color:#555;max-width:720px;margin:0 auto;">Quotations left untouched for too long need a manager's approval before they can become orders.</p>
+  </div>
+
+  <div style="background:#F4F6FB;border-radius:12px;padding:28px 32px;margin:32px 0;">
+    <p style="font-size:17px;margin:0;color:#333;">Prices, stock and terms change. Set a number of days in the Sales settings; when a salesperson confirms a quotation that had no activity for longer than that, it goes to Pending Approval instead of being confirmed. Approvers get an activity, approve or reject, and the salesperson is told the decision.</p>
+  </div>
+
+  <h2 style="font-size:26px;color:#1F3864;text-align:center;margin:40px 0 8px;">What it does</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:16px;">
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#9203; Inactivity rule</h3>
+        <p style="margin:0;color:#555;">Choose the number of days in the Sales settings: 14 by default, and 0 switches the check off.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#9989; Approve or reject</h3>
+        <p style="margin:0;color:#555;">Every approver gets an activity; once approved the quotation can be confirmed, and the salesperson is notified either way.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128260; No permanent pass</h3>
+        <p style="margin:0;color:#555;">An approval counts as activity, so a quotation left alone again for too long needs a new approval.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128274; Locked while pending</h3>
+        <p style="margin:0;color:#555;">Only approvers can change the customer, lines, prices or terms of a quotation that is waiting for approval.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128172; Real activity only</h3>
+        <p style="margin:0;color:#555;">Changes to the quotation and messages to or from the customer count; internal notes and automatic tracking do not.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128203; Quotations to Approve</h3>
+        <p style="margin:0;color:#555;">Approvers have their own menu listing every quotation that is waiting for them.</p>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#1F3864;color:#fff;border-radius:12px;padding:28px 32px;margin:36px 0;">
+    <h2 style="font-size:22px;margin:0 0 14px;color:#fff;">Built to behave well</h2>
+    <ul style="margin:0;padding-left:20px;font-size:16px;">
+      <li>Confirming several quotations at once confirms the fresh ones and sends only the stale ones for approval.</li>
+      <li>Online acceptance, signature and payment by the customer are never blocked, and they close a pending request by themselves.</li>
+      <li>A quotation that could not be confirmed anyway is not sent to the approvers; the usual error is shown instead.</li>
+      <li>If a company has no approver, confirming a stale quotation says so instead of leaving it waiting for nobody.</li>
+      <li>The approval status and the last activity date cannot be set by hand or by import by anyone who is not an approver.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:#666;font-size:15px;margin:36px 0 0;">
+    Odoo 18.0 &bull; Community &amp; Enterprise &bull; depends on Sales &bull; Licence LGPL-3
+  </p>
+
+  <div style="text-align:center;border-top:1px solid #E3E8F0;margin-top:28px;padding-top:24px;">
+    <h3 style="color:#1F3864;margin:0 0 6px;">Code Legion</h3>
+    <p style="color:#666;margin:0;">Odoo implementation and development.
+      <a href="https://thecodelegion.com" style="color:#2E5090;">thecodelegion.com</a>
+    </p>
+  </div>
+
+</section>

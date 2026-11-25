@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <data noupdate="1">
+        <record id="mail_act_cl_suspension_followup" model="mail.activity.type">
+            <field name="name">Suspended Quotation Follow-up</field>
+            <field name="icon">fa-pause-circle</field>
+            <field name="res_model">sale.order</field>
+            <field name="category">default</field>
+        </record>
+    </data>
+</odoo>

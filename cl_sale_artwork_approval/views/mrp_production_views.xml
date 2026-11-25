@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="mrp_production_form_view_cl_artwork" model="ir.ui.view">
+        <field name="name">mrp.production.form.cl.artwork</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Artwork" name="cl_artwork"
+                      groups="sales_team.group_sale_salesman,mrp.group_mrp_user,cl_sale_artwork_approval.group_cl_artwork_designer">
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not cl_artwork_id or cl_artwork_state == 'approved'">
+                        This artwork is not approved yet: wait before printing.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cl_artwork_id" readonly="state in ('done', 'cancel')"
+                                   options="{'no_create': True}"/>
+                            <field name="cl_artwork_state" widget="badge"
+                                   decoration-success="cl_artwork_state == 'approved'"
+                                   decoration-warning="cl_artwork_state != 'approved'"/>
+                            <field name="cl_artwork_proof_filename" invisible="1"/>
+                            <field name="cl_artwork_proof_file" filename="cl_artwork_proof_filename"/>
+                        </group>
+                        <group>
+                            <field name="cl_artwork_proof_preview" widget="image" nolabel="1" colspan="2"
+                                   options="{'size': [0, 240]}" invisible="not cl_artwork_proof_preview"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

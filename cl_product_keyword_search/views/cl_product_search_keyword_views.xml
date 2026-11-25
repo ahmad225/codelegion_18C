@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_product_search_keyword_view_list" model="ir.ui.view">
+        <field name="name">cl.product.search.keyword.list</field>
+        <field name="model">cl.product.search.keyword</field>
+        <field name="arch" type="xml">
+            <list string="Search Keywords" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="template_ids" widget="many2many_tags" optional="show"/>
+                <field name="variant_ids" widget="many2many_tags" optional="hide"
+                       groups="product.group_product_variant"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_product_search_keyword_view_search" model="ir.ui.view">
+        <field name="name">cl.product.search.keyword.search</field>
+        <field name="model">cl.product.search.keyword</field>
+        <field name="arch" type="xml">
+            <search string="Search Keywords">
+                <field name="name"/>
+                <field name="template_ids"/>
+                <filter string="Not Used" name="unused"
+                        domain="[('template_ids', '=', False), ('variant_ids', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_product_search_keyword_action" model="ir.actions.act_window">
+        <field name="name">Search Keywords</field>
+        <field name="res_model">cl.product.search.keyword</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a search keyword</p>
+            <p>
+                Keywords are the other words people use for a product: a nickname, an old
+                reference, a competitor's name for it. Put them on a product and it is found
+                by those words in the backend, in the web shop and in the Point of Sale.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cl_product_search_keyword"
+              name="Search Keywords"
+              parent="sale.prod_config_main"
+              action="cl_product_search_keyword_action"
+              sequence="35"/>
+</odoo>

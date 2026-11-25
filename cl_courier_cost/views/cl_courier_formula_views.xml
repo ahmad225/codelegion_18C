@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_courier_formula_view_list" model="ir.ui.view">
+        <field name="name">cl.courier.formula.list</field>
+        <field name="model">cl.courier.formula</field>
+        <field name="arch" type="xml">
+            <list string="Courier Formulas" decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="cl_expression"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'validated'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_courier_formula_view_form" model="ir.ui.view">
+        <field name="name">cl.courier.formula.form</field>
+        <field name="model">cl.courier.formula</field>
+        <field name="arch" type="xml">
+            <form string="Courier Formula">
+                <header>
+                    <button name="action_cl_validate" type="object" string="Validate" class="btn-primary"
+                            invisible="state == 'validated'" data-hotkey="v"
+                            groups="cl_courier_cost.group_cl_courier_manager"/>
+                    <button name="action_cl_reset_draft" type="object" string="Reset to Draft"
+                            invisible="state == 'draft'" groups="cl_courier_cost.group_cl_courier_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Courier X - per kg with minimum"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cl_validated_date" invisible="state != 'validated'"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <label for="cl_expression"/>
+                    <field name="cl_expression" class="font-monospace"
+                           placeholder="e.g. max(kg * rate_per_kg, minimum_charge) + iif(packages > 3, 15, 0)"/>
+                    <div class="alert alert-info mt-2" role="status">
+                        Use variable codes with <code>+ - * / ( )</code>, comparisons
+                        <code>&gt; &lt; &gt;= &lt;= == !=</code>, <code>and</code>, <code>or</code>, <code>not</code>
+                        and the functions <code>min(a, b, ...)</code>, <code>max(a, b, ...)</code>,
+                        <code>round(x)</code> or <code>round(x, digits)</code>, <code>ceil(x)</code>,
+                        <code>floor(x)</code> and <code>iif(condition, if_true, if_false)</code>
+                        (only the chosen branch is calculated, so <code>iif(kg &gt; 0, total / kg, 0)</code> is safe).
+                        Press <b>Validate</b> after every change: only validated formulas cost deliveries.
+                    </div>
+                    <notebook>
+                        <page string="Variables Used" name="variables">
+                            <field name="cl_variable_ids" readonly="1">
+                                <list>
+                                    <field name="cl_code"/>
+                                    <field name="name"/>
+                                    <field name="cl_type"/>
+                                    <field name="cl_fixed_value" invisible="cl_type != 'fixed'"/>
+                                    <field name="cl_source" invisible="cl_type != 'field'"/>
+                                    <field name="cl_expression" invisible="cl_type != 'formula'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Delivery Methods" name="carriers">
+                            <field name="cl_carrier_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="delivery_type"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="cl_description" placeholder="How this courier charges..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_courier_formula_view_search" model="ir.ui.view">
+        <field name="name">cl.courier.formula.search</field>
+        <field name="model">cl.courier.formula</field>
+        <field name="arch" type="xml">
+            <search string="Courier Formulas">
+                <field name="name"/>
+                <field name="cl_expression"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="validated" string="Validated" domain="[('state', '=', 'validated')]"/>
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="cl_courier_formula_action" model="ir.actions.act_window">
+        <field name="name">Courier Formulas</field>
+        <field name="res_model">cl.courier.formula</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a courier cost formula</p>
+            <p>Write how a courier charges you, validate it, then select it on the delivery method.</p>
+        </field>
+    </record>
+</odoo>

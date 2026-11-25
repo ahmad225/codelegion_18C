@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_delivery_invoice" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.delivery.invoice.auto.send</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                <setting id="cl_send_invoices_when_delivered_setting"
+                         string="Auto-send Invoice on Delivery"
+                         company_dependent="1"
+                         help="Send the posted customer invoices of a sale order (with their PDF) once an outgoing delivery of that order is validated. An invoice posted after the delivery is sent when it is posted.">
+                    <field name="cl_send_invoices_when_delivered"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <record id="cl_view_picking_form_collection_pin" model="ir.ui.view">
+        <field name="name">stock.picking.form.cl.collection.pin</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_cancel']" position="before">
+                <button name="action_cl_send_new_pin" type="object" string="Send New PIN"
+                        invisible="not cl_is_collection_delivery or state in ('done', 'cancel')"
+                        groups="sales_team.group_sale_salesman,stock.group_stock_manager"
+                        confirm="A new collection PIN will be emailed to the customer and the current one will stop working. Continue?"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_cl_view_pin_logs" type="object" class="oe_stat_button"
+                        icon="fa-key" invisible="cl_pin_log_count == 0"
+                        groups="sales_team.group_sale_salesman,stock.group_stock_user">
+                    <field name="cl_pin_log_count" widget="statinfo" string="PIN Log"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="cl_is_collection_delivery" invisible="1"/>
+                <field name="cl_pin_state" string="Collection PIN" widget="badge"
+                       decoration-success="cl_pin_state == 'active'"
+                       decoration-danger="cl_pin_state == 'locked'"
+                       invisible="not cl_is_collection_delivery"/>
+                <field name="cl_pin_verified" invisible="not cl_is_collection_delivery"/>
+                <field name="cl_pin_issued_at" invisible="not cl_is_collection_delivery or not cl_pin_issued_at"/>
+                <field name="cl_pin_attempts" invisible="not cl_is_collection_delivery or not cl_pin_attempts"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

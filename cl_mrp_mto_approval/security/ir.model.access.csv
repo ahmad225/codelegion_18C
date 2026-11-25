@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_mrp_mto_reject_wizard_coordinator,cl.mrp.mto.reject.wizard coordinator,model_cl_mrp_mto_reject_wizard,group_cl_mto_coordinator,1,1,1,0
+access_cl_mrp_mto_reject_wizard_system,cl.mrp.mto.reject.wizard system,model_cl_mrp_mto_reject_wizard,base.group_system,1,1,1,0
+access_cl_mto_viewer_mrp_workcenter,mrp.workcenter mto viewer,mrp.model_mrp_workcenter,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_routing_workcenter,mrp.routing.workcenter mto viewer,mrp.model_mrp_routing_workcenter,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_bom_byproduct,mrp.bom.byproduct mto viewer,mrp.model_mrp_bom_byproduct,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_workcenter_productivity,mrp.workcenter.productivity mto viewer,mrp.model_mrp_workcenter_productivity,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_workcenter_productivity_loss,mrp.workcenter.productivity.loss mto viewer,mrp.model_mrp_workcenter_productivity_loss,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_workcenter_capacity,mrp.workcenter.capacity mto viewer,mrp.model_mrp_workcenter_capacity,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_mrp_unbuild,mrp.unbuild mto viewer,mrp.model_mrp_unbuild,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_stock_scrap,stock.scrap mto viewer,stock.model_stock_scrap,group_cl_mto_sale_viewer,1,0,0,0
+access_cl_mto_viewer_stock_lot,stock.lot mto viewer,stock.model_stock_lot,group_cl_mto_sale_viewer,1,0,0,0

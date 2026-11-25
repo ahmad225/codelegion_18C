@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- The items are short: they are managed straight in the list -->
+    <record id="cl_order_checklist_item_view_list" model="ir.ui.view">
+        <field name="name">cl.order.checklist.item.list</field>
+        <field name="model">cl.order.checklist.item</field>
+        <field name="arch" type="xml">
+            <list string="Checklist Items" editable="bottom" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" placeholder="e.g. Delivery address confirmed with the customer"/>
+                <field name="guidance" optional="show" placeholder="Optional: how to check it"/>
+                <field name="blocking" widget="boolean_toggle"/>
+                <field name="applies_to" column_invisible="context.get('cl_checklist_kind')"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"
+                       options="{'no_create': True}" placeholder="All companies"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_order_checklist_item_view_search" model="ir.ui.view">
+        <field name="name">cl.order.checklist.item.search</field>
+        <field name="model">cl.order.checklist.item</field>
+        <field name="arch" type="xml">
+            <search string="Checklist Items">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('guidance', 'ilike', self)]"/>
+                <filter string="Required" name="cl_required" domain="[('blocking', '=', True)]"/>
+                <filter string="Reminders" name="cl_reminder" domain="[('blocking', '=', False)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_cl_checklist_item_sale" model="ir.actions.act_window">
+        <field name="name">Sales Order Checklist</field>
+        <field name="res_model">cl.order.checklist.item</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('applies_to', '=', 'sale')]</field>
+        <field name="context">{'default_applies_to': 'sale', 'cl_checklist_kind': 'sale'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add the first thing to check on a sales order</p>
+            <p>Every quotation gets a Checklist tab with these items. A quotation cannot be
+               confirmed until its required items are ticked.</p>
+        </field>
+    </record>
+
+    <record id="action_cl_checklist_item_mrp" model="ir.actions.act_window">
+        <field name="name">Manufacturing Order Checklist</field>
+        <field name="res_model">cl.order.checklist.item</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('applies_to', '=', 'mrp')]</field>
+        <field name="context">{'default_applies_to': 'mrp', 'cl_checklist_kind': 'mrp'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add the first thing to check on a manufacturing order</p>
+            <p>Every manufacturing order gets a Checklist tab with these items. It cannot be
+               marked as done until its required items are ticked.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cl_checklist_item_sale"
+              name="Order Checklist"
+              parent="sale.menu_sale_config"
+              action="action_cl_checklist_item_sale"
+              groups="sales_team.group_sale_manager"
+              sequence="80"/>
+
+    <menuitem id="menu_cl_checklist_item_mrp"
+              name="Order Checklist"
+              parent="mrp.menu_mrp_configuration"
+              action="action_cl_checklist_item_mrp"
+              groups="mrp.group_mrp_manager"
+              sequence="80"/>
+</odoo>

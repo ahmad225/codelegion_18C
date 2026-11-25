@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_contact_approval" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.contact.approval</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="after">
+                <block title="Customer Approval" name="cl_contact_approval_setting_container">
+                    <setting id="cl_contact_approval" company_dependent="1"
+                             help="New customers must be approved before their sales orders can be confirmed in the back office.">
+                        <field name="cl_contact_approval_enabled"/>
+                        <div class="content-group" invisible="not cl_contact_approval_enabled">
+                            <div class="mt16">
+                                <label for="cl_contact_mandatory_field_ids" class="o_light_label"/>
+                                <field name="cl_contact_mandatory_field_ids" widget="many2many_tags"
+                                       options="{'no_create': True}" placeholder="e.g. Email, Tax ID"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

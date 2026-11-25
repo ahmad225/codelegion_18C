@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <template id="report_low_stock_document">
+        <t t-call="web.external_layout">
+            <t t-set="summary" t-value="section['summary']"/>
+            <t t-set="qty_format" t-value="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+            <div class="page">
+                <h2>Low Stock</h2>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <strong>Date</strong>
+                        <div t-out="summary['date']"/>
+                    </div>
+                    <div class="col-4">
+                        <strong>Threshold</strong>
+                        <div t-out="summary['threshold']"/>
+                    </div>
+                    <div class="col-4">
+                        <strong>Compared quantity</strong>
+                        <div t-out="summary['basis']"/>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-8">
+                        <strong>Locations</strong>
+                        <div t-out="summary['locations']"/>
+                    </div>
+                    <div class="col-4">
+                        <strong>Products below minimum</strong>
+                        <div t-out="summary['product_count']"/>
+                    </div>
+                </div>
+                <p t-if="not section['rows']">No product is below its minimum stock.</p>
+                <table t-else="" class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Vendor</th>
+                            <th>Location</th>
+                            <th class="text-end">On Hand</th>
+                            <th class="text-end">Free to Use</th>
+                            <th class="text-end">Incoming</th>
+                            <th class="text-end">Forecast</th>
+                            <th class="text-end">Minimum</th>
+                            <th class="text-end">Missing</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="section['rows']" t-as="row">
+                            <td><span t-out="row['product']"/></td>
+                            <td><span t-out="row['category']"/></td>
+                            <td><span t-out="row['vendor']"/></td>
+                            <td><span t-out="row['location']"/></td>
+                            <td class="text-end"><span t-out="row['on_hand']" t-options="qty_format"/></td>
+                            <td class="text-end"><span t-out="row['free']" t-options="qty_format"/></td>
+                            <td class="text-end"><span t-out="row['incoming']" t-options="qty_format"/></td>
+                            <td class="text-end"><span t-out="row['forecast']" t-options="qty_format"/></td>
+                            <td class="text-end"><span t-out="row['minimum']" t-options="qty_format"/></td>
+                            <td class="text-end">
+                                <strong t-out="row['shortfall']" t-options="qty_format"/>
+                                <span t-out="row['uom']"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_low_stock">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!-- The printed document is the company itself -->
+                <t t-set="company" t-value="doc"/>
+                <t t-set="section" t-value="sections[doc.id]"/>
+                <t t-call="cl_low_stock_notification.report_low_stock_document"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_cl_low_stock" model="ir.actions.report">
+        <field name="name">Low Stock</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cl_low_stock_notification.report_low_stock</field>
+        <field name="report_file">cl_low_stock_notification.report_low_stock</field>
+        <field name="print_report_name">'Low Stock - %s' % object.name</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_courier_cost_exchange_view_form" model="ir.ui.view">
+        <field name="name">cl.courier.cost.exchange.form</field>
+        <field name="model">cl.courier.cost.exchange</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Sheet">
+                <field name="cl_mode" invisible="1"/>
+                <field name="cl_import_done" invisible="1"/>
+                <div invisible="cl_mode != 'export'">
+                    <p class="text-muted">
+                        Export the courier cost logs to Excel for the courier. The yellow
+                        <b>Actual Cost</b> and <b>Notes</b> columns are left blank to be filled in; keep the
+                        <b>Log ID</b> and <b>Reference</b> columns as they are.
+                    </p>
+                    <group>
+                        <group>
+                            <field name="cl_date_from"/>
+                            <field name="cl_date_to"/>
+                        </group>
+                        <group>
+                            <field name="cl_carrier_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="cl_only_unbilled"/>
+                        </group>
+                    </group>
+                </div>
+                <div invisible="cl_mode != 'import' or cl_import_done">
+                    <p class="text-muted">
+                        Import the sheet filled by the courier (XLSX, XLS, ODS or CSV). Rows with an
+                        <b>Actual Cost</b> update the log and lock it. Rows where it is blank are skipped and
+                        stay open; locked logs are never overwritten.
+                    </p>
+                    <group>
+                        <field name="cl_import_file" filename="cl_import_filename"/>
+                        <field name="cl_import_filename" invisible="1"/>
+                    </group>
+                </div>
+                <div invisible="not cl_import_done">
+                    <group string="Import Result">
+                        <group>
+                            <field name="cl_count_updated"/>
+                            <field name="cl_count_blank"/>
+                            <field name="cl_count_locked"/>
+                        </group>
+                        <group>
+                            <field name="cl_count_not_found"/>
+                            <field name="cl_count_invalid"/>
+                        </group>
+                    </group>
+                    <field name="cl_import_problems" invisible="not cl_import_problems" class="text-danger"/>
+                </div>
+                <footer>
+                    <button name="action_cl_export" type="object" string="Export" class="btn-primary"
+                            invisible="cl_mode != 'export'" data-hotkey="q"/>
+                    <button name="action_cl_import" type="object" string="Import" class="btn-primary"
+                            invisible="cl_mode != 'import' or cl_import_done" data-hotkey="q"/>
+                    <button special="cancel" string="Close" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_courier_cost_export_action" model="ir.actions.act_window">
+        <field name="name">Export Vendor Sheet</field>
+        <field name="res_model">cl.courier.cost.exchange</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_cl_mode': 'export'}</field>
+    </record>
+
+    <record id="cl_courier_cost_import_action" model="ir.actions.act_window">
+        <field name="name">Import Vendor Sheet</field>
+        <field name="res_model">cl.courier.cost.exchange</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_cl_mode': 'import'}</field>
+    </record>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- noupdate: your edits to the wording survive upgrades. -->
+    <data noupdate="1">
+        <record id="mail_template_product_rating" model="mail.template">
+            <field name="name">Product Review Notification (Code Legion)</field>
+            <field name="model_id" ref="rating.model_rating_rating"/>
+            <field name="subject">{{ 'Updated' if ctx.get('cl_review_updated') else 'New' }} review: {{ object.res_name }} ({{ int(object.rating) }}/5)</field>
+            <!-- Sent from the company, never from the reviewing customer. -->
+            <field name="email_from">{{ ctx.get('cl_company_email') or user.company_id.email_formatted or '' }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;">
+    <div style="max-width:600px;margin:16px auto;border:1px solid #e3e8f0;border-radius:12px;overflow:hidden;">
+        <div style="background:#1F3864;color:#fff;padding:18px 24px;font-size:18px;font-weight:700;">
+            <t t-if="ctx.get('cl_review_updated')">A product review was updated</t>
+            <t t-else="">New product review</t>
+        </div>
+        <div style="padding:22px 24px;font-size:14px;line-height:1.6;">
+            <p style="margin:0 0 6px;"><strong>Product:</strong> <t t-out="object.res_name or ''"/></p>
+            <p style="margin:0 0 6px;"><strong>Customer:</strong> <t t-out="object.partner_id.name or 'Anonymous'"/></p>
+            <p style="margin:0 0 12px;"><strong>Rating:</strong> <t t-out="int(object.rating)"/> / 5</p>
+            <div t-if="object.feedback" style="background:#f4f6fb;border-left:4px solid #F59E0B;padding:12px 16px;border-radius:6px;font-style:italic;">
+                <t t-out="object.feedback"/>
+            </div>
+            <p style="margin:20px 0 0;">
+                <a t-att-href="'/odoo/action-rating.rating_rating_action/%s' % object.id"
+                   style="background:#1F3864;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:13px;">
+                    View review
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

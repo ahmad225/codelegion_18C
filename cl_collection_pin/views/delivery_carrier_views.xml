@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <record id="cl_view_delivery_carrier_form_collection" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.cl.collection.pin</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='provider_details']" position="inside">
+                <field name="cl_is_collection"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cl_view_delivery_carrier_list_collection" model="ir.ui.view">
+        <field name="name">delivery.carrier.list.cl.collection.pin</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='delivery_type']" position="after">
+                <field name="cl_is_collection" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

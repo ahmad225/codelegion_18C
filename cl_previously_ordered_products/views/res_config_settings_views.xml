@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- One setting among the shop's own, for the website selected at the top of the page -->
+    <record id="res_config_settings_view_form_cl_reorder" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.reorder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='website_shop_checkout']" position="inside">
+                <setting id="cl_reorder_setting" string="Previously Ordered Page"
+                         help="Customers find the products of their past orders in their account and add them to the cart again.">
+                    <div class="content-group">
+                        <div class="d-flex align-items-baseline mt8">
+                            <label for="cl_reorder_orders_scanned" string="Look at the last" class="o_light_label me-2"/>
+                            <field name="cl_reorder_orders_scanned" class="oe_inline me-2" style="width: 4rem;"/>
+                            <span>confirmed orders</span>
+                        </div>
+                        <div class="d-flex align-items-baseline mt8">
+                            <field name="cl_reorder_add_all" class="me-2"/>
+                            <label for="cl_reorder_add_all"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

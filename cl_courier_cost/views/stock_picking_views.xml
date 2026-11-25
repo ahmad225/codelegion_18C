@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_picking_form_cl_courier_cost" model="ir.ui.view">
+        <field name="name">stock.picking.form.cl.courier.cost</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_cl_open_courier_costs" type="object" class="oe_stat_button" icon="fa-money"
+                        invisible="not cl_courier_cost_count" groups="cl_courier_cost.group_cl_courier_user">
+                    <field name="cl_courier_cost_count" widget="statinfo" string="Courier Cost"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

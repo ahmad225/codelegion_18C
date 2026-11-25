@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_order_form_cl_artwork" model="ir.ui.view">
+        <field name="name">sale.order.form.cl.artwork</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_cl_view_artworks" type="object" class="oe_stat_button"
+                        icon="fa-paint-brush" invisible="cl_artwork_count == 0"
+                        groups="sales_team.group_sale_salesman">
+                    <field name="cl_artwork_count" widget="statinfo" string="Artworks"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='name']" position="after">
+                <field name="cl_artwork_required" column_invisible="1"/>
+                <field name="cl_artwork_partner_id" column_invisible="1"/>
+                <field name="cl_artwork_id" optional="hide" groups="sales_team.group_sale_salesman"
+                       invisible="display_type or not product_id"
+                       options="{'no_create': True}"/>
+                <field name="cl_artwork_state" string="Artwork" widget="badge" optional="show"
+                       groups="sales_team.group_sale_salesman"
+                       invisible="not cl_artwork_id"
+                       decoration-info="cl_artwork_state in ('design', 'rework')"
+                       decoration-warning="cl_artwork_state in ('draft', 'review')"
+                       decoration-success="cl_artwork_state == 'approved'"
+                       decoration-muted="cl_artwork_state == 'cancel'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Artwork" name="cl_artwork" groups="sales_team.group_sale_salesman">
+                    <field name="cl_artwork_status" invisible="1"/>
+                    <div class="alert alert-warning" role="alert" invisible="cl_artwork_status != 'missing'">
+                        <strong>Waiting for approved artwork:</strong>
+                        <field name="cl_artwork_missing" nolabel="1" class="d-inline"/>
+                    </div>
+                    <div class="alert alert-success" role="status" invisible="cl_artwork_status != 'approved'">
+                        Every product that requires artwork has approved artwork.
+                    </div>
+                    <p class="text-muted" invisible="cl_artwork_line_ids">
+                        No saved line of this order needs artwork. Lines appear here once their product
+                        is marked "Requires Artwork" or an artwork is linked to them.
+                    </p>
+                    <!-- One row per order line: what it needs, what it has, what to do next. -->
+                    <field name="cl_artwork_line_ids" nolabel="1" readonly="1" invisible="not cl_artwork_line_ids">
+                        <list create="0" delete="0" no_open="1"
+                              decoration-warning="cl_artwork_required and cl_artwork_state != 'approved'">
+                            <field name="cl_artwork_required" column_invisible="1"/>
+                            <field name="product_id" string="Order Line"/>
+                            <field name="product_uom_qty" string="Quantity"/>
+                            <field name="cl_artwork_id" string="Artwork" options="{'no_open': True}"/>
+                            <field name="cl_artwork_state" string="Status" widget="badge"
+                                   decoration-info="cl_artwork_state in ('design', 'rework')"
+                                   decoration-warning="cl_artwork_state in ('draft', 'review')"
+                                   decoration-success="cl_artwork_state == 'approved'"
+                                   decoration-muted="cl_artwork_state == 'cancel'"/>
+                            <button name="action_cl_request_artwork" type="object" string="Request Artwork"
+                                    icon="fa-plus" invisible="cl_artwork_id and cl_artwork_state != 'cancel'"/>
+                            <button name="action_cl_open_artwork" type="object" string="Open"
+                                    icon="fa-external-link" invisible="not cl_artwork_id"/>
+                            <button name="action_cl_new_artwork_version" type="object" string="New Version"
+                                    icon="fa-clone" invisible="cl_artwork_state != 'approved'"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_cl_artwork" model="ir.ui.view">
+        <field name="name">sale.order.list.cl.artwork</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="cl_artwork_status" string="Artwork" widget="badge" optional="hide"
+                       groups="sales_team.group_sale_salesman"
+                       decoration-warning="cl_artwork_status == 'missing'"
+                       decoration-success="cl_artwork_status == 'approved'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

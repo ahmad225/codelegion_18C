@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_sale_order_view_form_auto_promotion" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.cl.sale.auto.promotion</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="cl_has_reward_choice" invisible="1"/>
+                <field name="cl_promo_expiry_level" invisible="1"/>
+                <!-- Promotion end notice: amber while it is ending, red once one has ended -->
+                <div class="alert alert-warning mb-0" role="status"
+                     invisible="cl_promo_expiry_level != 'soon'">
+                    <strong>Promotion ending soon</strong>
+                    <field name="cl_promo_expiry_notice" class="d-block" style="white-space: pre-line;"/>
+                </div>
+                <div class="alert alert-danger mb-0" role="status"
+                     invisible="cl_promo_expiry_level != 'ended'">
+                    <strong>Promotion ended</strong>
+                    <field name="cl_promo_expiry_notice" class="d-block" style="white-space: pre-line;"/>
+                </div>
+                <!-- The salesperson decides between competing promotions -->
+                <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center" role="status"
+                     invisible="not cl_has_reward_choice or state not in ('draft', 'sent')">
+                    <span>More than one promotion fits this quotation and only you can decide which one to apply.</span>
+                    <button name="action_open_reward_wizard" type="object" string="Pick a Promotion"
+                            class="btn btn-link p-0 ms-3 text-nowrap"/>
+                </div>
+            </xpath>
+            <xpath expr="//list//field[@name='product_uom_qty']" position="before">
+                <field name="cl_auto_applied" optional="hide"/>
+            </xpath>
+            <xpath expr="//group[@name='sale_total']/field[@name='tax_totals']" position="after">
+                <div class="o_cl_promotion_savings text-end text-muted small" colspan="2"
+                     invisible="not cl_promotion_savings">
+                    Includes <field name="cl_promotion_savings" class="oe_inline fw-bold"/> of promotion savings
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

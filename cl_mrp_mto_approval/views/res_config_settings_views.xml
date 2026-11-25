@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_mto_approval" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.mto.approval</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='process_operations_setting_container']" position="inside">
+                <setting id="cl_mto_approval" company_dependent="1"
+                         string="Make-to-Order Approval"
+                         help="Manufacturing orders created from confirmed sales orders wait for a Manufacturing Coordinator's approval before production can start.">
+                    <field name="cl_mto_approval_required"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

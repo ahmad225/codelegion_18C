@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Its own category, so the standard role dropdowns on the user form stay dropdowns. -->
+    <record id="module_category_cl_artwork" model="ir.module.category">
+        <field name="name">Customer Artwork</field>
+        <field name="parent_id" ref="base.module_category_sales"/>
+        <field name="sequence">35</field>
+    </record>
+
+    <record id="group_cl_artwork_designer" model="res.groups">
+        <field name="name">Designer</field>
+        <field name="category_id" ref="module_category_cl_artwork"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can be chosen as designer, sees customer artwork and uploads proofs for the artwork assigned to them.</field>
+    </record>
+
+    <record id="group_cl_artwork_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_cl_artwork"/>
+        <field name="implied_ids" eval="[(4, ref('group_cl_artwork_designer')), (4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="comment">Designs, reviews and approves artwork, and may delete artwork that was never approved.</field>
+    </record>
+
+    <record id="cl_artwork_rule_company" model="ir.rule">
+        <field name="name">Customer Artwork: multi-company</field>
+        <field name="model_id" ref="model_cl_artwork"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Designers see all artwork (the history of a customer helps), but only change their own. -->
+    <record id="cl_artwork_rule_designer_read" model="ir.rule">
+        <field name="name">Customer Artwork: designers read all</field>
+        <field name="model_id" ref="model_cl_artwork"/>
+        <field name="groups" eval="[(4, ref('group_cl_artwork_designer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="cl_artwork_rule_designer_write" model="ir.rule">
+        <field name="name">Customer Artwork: designers change their own</field>
+        <field name="model_id" ref="model_cl_artwork"/>
+        <field name="groups" eval="[(4, ref('group_cl_artwork_designer'))]"/>
+        <field name="domain_force">[('cl_designer_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Sales users who are designers too keep their full sales access. -->
+    <record id="cl_artwork_rule_salesman" model="ir.rule">
+        <field name="name">Customer Artwork: sales users</field>
+        <field name="model_id" ref="model_cl_artwork"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

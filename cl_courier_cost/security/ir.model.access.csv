@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_courier_variable_user,cl.courier.variable user,model_cl_courier_variable,group_cl_courier_user,1,0,0,0
+access_cl_courier_variable_manager,cl.courier.variable manager,model_cl_courier_variable,group_cl_courier_manager,1,1,1,1
+access_cl_courier_formula_user,cl.courier.formula user,model_cl_courier_formula,group_cl_courier_user,1,0,0,0
+access_cl_courier_formula_manager,cl.courier.formula manager,model_cl_courier_formula,group_cl_courier_manager,1,1,1,1
+access_cl_courier_cost_user,cl.courier.cost user,model_cl_courier_cost,group_cl_courier_user,1,1,0,0
+access_cl_courier_cost_manager,cl.courier.cost manager,model_cl_courier_cost,group_cl_courier_manager,1,1,1,1
+access_cl_courier_cost_exchange_user,cl.courier.cost.exchange user,model_cl_courier_cost_exchange,group_cl_courier_user,1,1,1,1

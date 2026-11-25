@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Card on the portal home page -->
+    <template id="portal_my_home_cl_statement" inherit_id="portal.portal_my_home"
+              name="Portal: Account Statement">
+        <!-- Odoo 18 groups the cards by category and only renders the
+             categories that are switched on -->
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
+                <t t-set="title">Account Statement</t>
+                <t t-set="url" t-value="'/my/statement'"/>
+                <t t-set="text">Your balance, transactions and anything overdue</t>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_breadcrumbs_cl_statement" inherit_id="portal.portal_breadcrumbs"
+              name="Portal: Account Statement breadcrumb" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'cl_statement'" class="breadcrumb-item active">Account Statement</li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_statement" name="My Account Statement">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Account Statement</t>
+            </t>
+
+            <form action="/my/statement" method="get" class="row g-2 align-items-end my-3">
+                <div class="col-auto">
+                    <label class="form-label mb-0" for="cl_date_from">From</label>
+                    <input type="date" id="cl_date_from" name="date_from" class="form-control" t-att-value="date_from"/>
+                </div>
+                <div class="col-auto">
+                    <label class="form-label mb-0" for="cl_date_to">To</label>
+                    <input type="date" id="cl_date_to" name="date_to" class="form-control" t-att-value="date_to"/>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Show</button>
+                </div>
+                <div class="col-auto ms-auto">
+                    <a class="btn btn-secondary"
+                       t-attf-href="/my/statement/pdf?statement_type=account&amp;date_from=#{date_from}&amp;date_to=#{date_to}">
+                        <i class="fa fa-download me-1"/>Statement PDF
+                    </a>
+                    <a class="btn btn-secondary" href="/my/statement/pdf?statement_type=overdue">
+                        <i class="fa fa-download me-1"/>Overdue PDF
+                    </a>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <t t-call="cl_customer_statement.cl_statement_account_body"/>
+            </div>
+
+            <t t-if="overdue['rows']">
+                <div class="table-responsive mt-4">
+                    <t t-set="st" t-value="overdue"/>
+                    <t t-call="cl_customer_statement.cl_statement_overdue_body"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

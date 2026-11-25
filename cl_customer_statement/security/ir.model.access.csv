@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_customer_statement_wizard_invoice,cl.customer.statement.wizard.invoice,model_cl_customer_statement_wizard,account.group_account_invoice,1,1,1,1
+access_cl_customer_statement_log_invoice,cl.customer.statement.log.invoice,model_cl_customer_statement_log,account.group_account_invoice,1,0,0,0
+access_cl_customer_statement_log_readonly,cl.customer.statement.log.readonly,model_cl_customer_statement_log,account.group_account_readonly,1,0,0,0
+access_cl_customer_statement_log_manager,cl.customer.statement.log.manager,model_cl_customer_statement_log,account.group_account_manager,1,1,1,1

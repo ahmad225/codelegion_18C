@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <record id="cl_collection_pin_verify_view_form" model="ir.ui.view">
+        <field name="name">cl.collection.pin.verify.form</field>
+        <field name="model">cl.collection.pin.verify</field>
+        <field name="arch" type="xml">
+            <form string="Verify Collection PIN">
+                <div class="alert alert-danger" role="alert" invisible="not cl_error">
+                    <field name="cl_error" nolabel="1"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="cl_pin_state != 'locked'">
+                    The PIN is locked after too many wrong attempts. An Inventory Administrator
+                    must issue a new PIN with "Send New PIN" on the delivery or the sales order.
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="cl_pin_state in ('active', 'locked')">
+                    There is no active PIN for this order. Issue one with "Send New PIN" on the
+                    delivery or the sales order: the customer receives it by email.
+                </div>
+                <group>
+                    <group>
+                        <field name="cl_picking_id"/>
+                        <field name="cl_order_id"/>
+                        <field name="cl_partner_id"/>
+                    </group>
+                    <group>
+                        <field name="cl_pin_state"/>
+                        <field name="cl_attempts_left" invisible="cl_pin_state != 'active'"/>
+                    </group>
+                </group>
+                <group invisible="cl_pin_state != 'active'">
+                    <field name="cl_pin" password="True" placeholder="6 digits"
+                           class="o_cl_collection_pin" default_focus="1"/>
+                </group>
+                <field name="cl_validate_picking_ids" invisible="1"/>
+                <footer>
+                    <button name="action_cl_verify" type="object" string="Verify &amp; Validate"
+                            class="btn-primary" data-hotkey="q"
+                            invisible="cl_pin_state != 'active'"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

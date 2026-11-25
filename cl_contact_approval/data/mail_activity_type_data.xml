@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <data noupdate="1">
+        <record id="mail_act_cl_customer_approval" model="mail.activity.type">
+            <field name="name">Customer Approval</field>
+            <field name="icon">fa-check-circle-o</field>
+            <field name="res_model">res.partner</field>
+            <field name="category">default</field>
+        </record>
+
+        <record id="mail_act_cl_unapproved_order" model="mail.activity.type">
+            <field name="name">Unapproved Customer Order</field>
+            <field name="icon">fa-exclamation-triangle</field>
+            <field name="res_model">sale.order</field>
+            <field name="category">default</field>
+        </record>
+    </data>
+</odoo>

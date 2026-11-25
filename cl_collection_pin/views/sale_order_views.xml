@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>).
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0). -->
+<odoo>
+    <record id="cl_view_order_form_collection_pin" model="ir.ui.view">
+        <field name="name">sale.order.form.cl.collection.pin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_cl_send_new_pin" type="object" string="Send New PIN"
+                        invisible="not cl_is_collection_order or state != 'sale'"
+                        groups="sales_team.group_sale_salesman,stock.group_stock_manager"
+                        confirm="A new collection PIN will be emailed to the customer and the current one will stop working. Continue?"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_cl_view_pin_logs" type="object" class="oe_stat_button"
+                        icon="fa-key" invisible="cl_pin_log_count == 0"
+                        groups="sales_team.group_sale_salesman,stock.group_stock_user">
+                    <field name="cl_pin_log_count" widget="statinfo" string="PIN Log"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='sale_shipping']" position="after">
+                <group name="cl_collection_pin" string="Collection PIN" invisible="not cl_is_collection_order">
+                    <field name="cl_is_collection_order" invisible="1"/>
+                    <field name="cl_pin_state" decoration-success="cl_pin_state == 'active'"
+                           decoration-danger="cl_pin_state == 'locked'" widget="badge"/>
+                    <field name="cl_pin_issued_at" invisible="not cl_pin_issued_at"/>
+                    <field name="cl_pin_attempts"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_hik_device_officer,cl.hik.device.officer,model_cl_hik_device,hr_attendance.group_hr_attendance_officer,1,0,0,0
+access_cl_hik_device_manager,cl.hik.device.manager,model_cl_hik_device,hr_attendance.group_hr_attendance_manager,1,1,1,1
+access_cl_hik_punch_officer,cl.hik.punch.officer,model_cl_hik_punch,hr_attendance.group_hr_attendance_officer,1,0,0,0
+access_cl_hik_punch_manager,cl.hik.punch.manager,model_cl_hik_punch,hr_attendance.group_hr_attendance_manager,1,0,0,0
+access_cl_hik_device_password_manager,cl.hik.device.password.manager,model_cl_hik_device_password,hr_attendance.group_hr_attendance_manager,1,1,1,1

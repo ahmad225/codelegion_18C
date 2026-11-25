@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- ============ Reminder schedule (stages) ============ -->
+    <record id="reminder_stage_view_form" model="ir.ui.view">
+        <field name="name">cl.invoice.reminder.stage.form</field>
+        <field name="model">cl.invoice.reminder.stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. First reminder"/></h1>
+                    </div>
+                    <group>
+                        <group string="When">
+                            <label for="delay_days"/>
+                            <div class="o_row">
+                                <field name="delay_days" class="oe_inline"/>
+                                <span>days after the due date</span>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="What">
+                            <field name="template_id" context="{'default_model': 'res.partner'}"/>
+                        </group>
+                    </group>
+                    <p class="text-muted">
+                        An invoice receives each stage at most once, and never a stage that
+                        comes earlier than one it already received. A customer with several
+                        invoices at the same stage gets a single email.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="reminder_stage_view_list" model="ir.ui.view">
+        <field name="name">cl.invoice.reminder.stage.list</field>
+        <field name="model">cl.invoice.reminder.stage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="delay_days"/>
+                <field name="template_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="reminder_stage_view_search" model="ir.ui.view">
+        <field name="name">cl.invoice.reminder.stage.search</field>
+        <field name="model">cl.invoice.reminder.stage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="template_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_reminder_stage" model="ir.actions.act_window">
+        <field name="name">Reminder Stages</field>
+        <field name="res_model">cl.invoice.reminder.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Build your reminder schedule
+            </p>
+            <p>
+                For example a friendly reminder 7 days after the due date, a firmer one
+                after 15 days and a final notice after 30 days. Nothing is sent as long
+                as there is no stage.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============ Reminders sent ============ -->
+    <record id="reminder_log_view_list" model="ir.ui.view">
+        <field name="name">cl.invoice.reminder.log.list</field>
+        <field name="model">cl.invoice.reminder.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="sent_date"/>
+                <field name="partner_id"/>
+                <field name="move_id"/>
+                <field name="stage_id"/>
+                <field name="email"/>
+                <field name="days_overdue"/>
+                <field name="amount_due"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="reminder_log_view_search" model="ir.ui.view">
+        <field name="name">cl.invoice.reminder.log.search</field>
+        <field name="model">cl.invoice.reminder.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="move_id"/>
+                <field name="stage_id"/>
+                <field name="email"/>
+                <filter name="sent_date" string="Sent On" date="sent_date"/>
+                <group expand="0" string="Group By">
+                    <filter name="by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="by_stage" string="Stage" context="{'group_by': 'stage_id'}"/>
+                    <filter name="by_day" string="Day Sent" context="{'group_by': 'sent_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_reminder_log" model="ir.actions.act_window">
+        <field name="name">Reminders Sent</field>
+        <field name="res_model">cl.invoice.reminder.log</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_by_day': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No reminder has been sent yet
+            </p>
+            <p>
+                Every reminder emailed for an overdue invoice is listed here, with the
+                address it went to and what was due at the time.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============ Invoices ============ -->
+    <record id="view_move_form_reminders" model="ir.ui.view">
+        <field name="name">account.move.form.cl.invoice.reminder</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_cl_view_reminders" type="object"
+                        class="oe_stat_button" icon="fa-bell-o"
+                        groups="account.group_account_invoice,account.group_account_readonly"
+                        invisible="cl_reminder_count == 0">
+                    <field name="cl_reminder_count" widget="statinfo" string="Reminders"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_list_reminders" model="ir.ui.view">
+        <field name="name">account.move.list.cl.invoice.reminder</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date_due" position="after">
+                <field name="cl_reminder_stage_id" optional="hide"
+                       groups="account.group_account_invoice,account.group_account_readonly"/>
+                <field name="cl_reminder_date" optional="hide"
+                       groups="account.group_account_invoice,account.group_account_readonly"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Work list: what is overdue and how far each invoice is in the schedule -->
+    <record id="overdue_invoice_view_list" model="ir.ui.view">
+        <field name="name">account.move.list.cl.overdue</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-danger="cl_reminder_final" decoration-muted="cl_reminder_count == 0">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="invoice_user_id" optional="hide" widget="many2one_avatar_user"/>
+                <field name="invoice_date_due"/>
+                <field name="cl_days_overdue"/>
+                <field name="amount_residual" string="Amount Due"/>
+                <field name="currency_id" column_invisible="1"/>
+                <!-- only the company currency column can be totalled -->
+                <field name="amount_residual_signed" string="Amount Due (Company Currency)"
+                       sum="Total" optional="show"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="payment_state" widget="badge" optional="show"
+                       decoration-warning="payment_state == 'partial'"/>
+                <field name="cl_reminder_stage_id" widget="badge"/>
+                <field name="cl_reminder_date" optional="show"/>
+                <field name="cl_reminder_count" optional="hide"/>
+                <field name="cl_reminder_final" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="overdue_invoice_view_search" model="ir.ui.view">
+        <field name="name">account.move.search.cl.overdue</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="invoice_user_id"/>
+                <field name="cl_reminder_stage_id"/>
+                <field name="cl_days_overdue" string="Overdue for at least (days)"
+                       filter_domain="[('cl_days_overdue', '&gt;=', self)]"/>
+                <filter name="not_reminded" string="Not Reminded Yet"
+                        domain="[('cl_reminder_stage_id', '=', False)]"/>
+                <filter name="reminded" string="Reminded"
+                        domain="[('cl_reminder_stage_id', '!=', False)]"/>
+                <filter name="final" string="Final Reminder Sent"
+                        domain="[('cl_reminder_final', '=', True)]"/>
+                <separator/>
+                <filter name="partial" string="Partially Paid"
+                        domain="[('payment_state', '=', 'partial')]"/>
+                <separator/>
+                <filter name="no_email" string="No Email Address"
+                        domain="[('partner_id.email', '=', False), ('commercial_partner_id.email', '=', False)]"
+                        help="These customers cannot be reminded until they have an email address"/>
+                <group expand="0" string="Group By">
+                    <filter name="by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="by_stage" string="Reminder Stage" context="{'group_by': 'cl_reminder_stage_id'}"/>
+                    <filter name="by_user" string="Salesperson" context="{'group_by': 'invoice_user_id'}"/>
+                    <filter name="by_due" string="Due Date" context="{'group_by': 'invoice_date_due:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_overdue_invoice" model="ir.actions.act_window">
+        <field name="name">Overdue Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="overdue_invoice_view_list"/>
+        <field name="search_view_id" ref="overdue_invoice_view_search"/>
+        <field name="domain">[('cl_days_overdue', '&gt;', 0)]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No customer invoice is overdue
+            </p>
+        </field>
+    </record>
+
+    <!-- ============ Settings ============ -->
+    <record id="res_config_settings_view_form_reminders" model="ir.ui.view">
+        <field name="name">res.config.settings.form.cl.invoice.reminder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Invoice Reminders" name="cl_invoice_reminder_setting_container">
+                    <setting string="Reminder Schedule"
+                             help="Email customers automatically when their invoices are overdue.">
+                        <button name="%(action_reminder_stage)d" type="action"
+                                string="Reminder Stages" icon="oi-arrow-right" class="btn-link"/>
+                    </setting>
+                    <setting string="Emails Per Run" company_dependent="1"
+                             help="Customers emailed each time the reminder job runs. When more are waiting, the job runs again straight away.">
+                        <field name="cl_reminder_batch_size"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============ Menus ============ -->
+    <menuitem id="menu_overdue_invoice"
+              name="Overdue Invoices"
+              parent="account.menu_finance_receivables"
+              action="action_overdue_invoice"
+              sequence="20"/>
+    <menuitem id="menu_reminder_log"
+              name="Reminders Sent"
+              parent="account.menu_finance_receivables"
+              action="action_reminder_log"
+              sequence="21"/>
+    <menuitem id="menu_reminder_stage"
+              name="Reminder Stages"
+              parent="account.account_invoicing_menu"
+              action="action_reminder_stage"
+              groups="account.group_account_manager"
+              sequence="50"/>
+</odoo>

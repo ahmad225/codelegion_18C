@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo noupdate="1">
+    <!-- noupdate: wording changed by the finance team and a job switched off
+         by the administrator both survive module upgrades. -->
+    <record id="email_template_overdue_invoices" model="mail.template">
+        <field name="name">Overdue invoices: reminder to the customer</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">{{ (ctx.get('cl_company') or user.company_id).name }}: payment reminder</field>
+        <field name="email_from">{{ (ctx.get('cl_company') or user.company_id).email_formatted or user.email_formatted }}</field>
+        <field name="partner_to">{{ object.id }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="description">Sent by the invoice reminder job, once per customer, with the list of overdue invoices</field>
+        <field name="body_html" type="html">
+<div>
+    <t t-set="company" t-value="ctx.get('cl_company') or user.company_id"/>
+    <t t-set="invoices" t-value="ctx.get('cl_invoices') or []"/>
+    <p>Hello <t t-out="object.name or ''">Azure Interior</t>,</p>
+    <p>
+        According to our books, payment for the
+        <t t-if="len(invoices) == 1">invoice</t><t t-else="">invoices</t>
+        below has not reached us yet. Could you please look into it?
+    </p>
+    <table border="0" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
+        <tr>
+            <td style="border-bottom:2px solid #444444;"><b>Invoice</b></td>
+            <td style="border-bottom:2px solid #444444;"><b>Invoice date</b></td>
+            <td style="border-bottom:2px solid #444444;"><b>Was due on</b></td>
+            <td style="border-bottom:2px solid #444444;" align="right"><b>Still to pay</b></td>
+        </tr>
+        <t t-foreach="invoices" t-as="invoice">
+        <tr>
+            <td style="border-bottom:1px solid #cccccc;">
+                <a t-att-href="invoice.get_portal_url()" t-out="invoice.name or ''">INV/2025/00012</a>
+            </td>
+            <td style="border-bottom:1px solid #cccccc;" t-out="format_date(invoice.invoice_date) or ''">01/03/2025</td>
+            <td style="border-bottom:1px solid #cccccc;" t-out="format_date(invoice.invoice_date_due) or ''">31/03/2025</td>
+            <td style="border-bottom:1px solid #cccccc;" align="right"
+                t-out="format_amount(invoice.amount_residual, invoice.currency_id) or ''">$ 1,250.00</td>
+        </tr>
+        </t>
+    </table>
+    <p>
+        If your payment is already on its way, thank you, and please ignore this message.
+        For any question about these invoices, just reply to this email.
+    </p>
+    <p>
+        Best regards,<br/>
+        <t t-out="company.name or ''">YourCompany</t>
+    </p>
+</div>
+        </field>
+    </record>
+
+    <record id="cron_send_invoice_reminders" model="ir.cron">
+        <field name="name">Invoice reminders: email customers about overdue invoices</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cl_send_invoice_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

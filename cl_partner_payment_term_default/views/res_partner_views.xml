@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Contact form, Sales & Purchase tab: the "keep own" switch sits right
+         under the customer payment terms and is shown only on contacts that
+         belong to a company (a company has nobody to follow). -->
+    <record id="view_partner_form_inherit_cl_payment_term" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.cl.payment.term.default</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_payment_term_id" position="after">
+                <field name="cl_keep_own_payment_term"
+                       invisible="not parent_id or is_company"
+                       groups="account.group_account_invoice,account.group_account_readonly"/>
+            </field>
+        </field>
+    </record>
+</odoo>

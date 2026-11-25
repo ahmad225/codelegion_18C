@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Customer Credit Control">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1F3864"/>
+      <stop offset="1" stop-color="#2E5090"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="140" height="140" rx="30" fill="url(#bg)"/>
+  <!-- credit card -->
+  <rect x="30" y="47" width="80" height="52" rx="7" fill="#FFFFFF"/>
+  <rect x="30" y="57" width="80" height="11" fill="#1F3864"/>
+  <rect x="40" y="80" width="30" height="6" rx="3" fill="#C9D4E8"/>
+  <rect x="40" y="89" width="20" height="5" rx="2.5" fill="#D9E1F0"/>
+  <!-- approval shield + tick -->
+  <path d="M96 78 l20 7 v13 c0 13 -9 21 -20 25 c-11 -4 -20 -12 -20 -25 v-13 z" fill="#23A455" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M88 101 l6 6 11 -13" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

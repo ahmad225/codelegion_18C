@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <data noupdate="1">
+        <record id="mail_act_cl_artwork_design" model="mail.activity.type">
+            <field name="name">Design Artwork</field>
+            <field name="icon">fa-paint-brush</field>
+            <field name="res_model">cl.artwork</field>
+            <field name="category">default</field>
+            <field name="delay_count">2</field>
+        </record>
+        <record id="mail_act_cl_artwork_review" model="mail.activity.type">
+            <field name="name">Review Artwork Proof</field>
+            <field name="icon">fa-check-square-o</field>
+            <field name="res_model">cl.artwork</field>
+            <field name="category">default</field>
+            <field name="delay_count">1</field>
+        </record>
+    </data>
+</odoo>

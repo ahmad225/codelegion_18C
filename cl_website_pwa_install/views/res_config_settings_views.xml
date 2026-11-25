@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_pwa_install" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.website.pwa.install</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='website_info_settings']" position="after">
+                <block title="App Install" id="cl_pwa_install_settings" invisible="not website_id">
+                    <setting id="cl_pwa_install_setting" string="Install as an App"
+                             help="Let visitors install this website as an app (PWA) and invite them to do so on the homepage.">
+                        <field name="cl_pwa_enabled"/>
+                        <div class="content-group" invisible="not cl_pwa_enabled">
+                            <div class="row mt8">
+                                <label class="col-lg-4 o_light_label" string="App Name" for="cl_pwa_name"/>
+                                <field name="cl_pwa_name" placeholder="Website name"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-4 o_light_label" string="Short Name" for="cl_pwa_short_name"/>
+                                <field name="cl_pwa_short_name" placeholder="App name"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-4 o_light_label" string="Theme Color" for="cl_pwa_theme_color"/>
+                                <field name="cl_pwa_theme_color" widget="color"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-4 o_light_label" string="Background Color" for="cl_pwa_background_color"/>
+                                <field name="cl_pwa_background_color" widget="color"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-4 o_light_label" string="App Icon" for="cl_pwa_icon"/>
+                                <field name="cl_pwa_icon" widget="image" class="float-start oe_avatar bg-view"/>
+                            </div>
+                            <div class="text-muted mt8">
+                                Square image, at least 192 x 192 pixels (512 x 512 recommended).
+                                Without one, the favicon is used when it is large enough, otherwise the Odoo logo.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_order_form_cl_contact_approval" model="ir.ui.view">
+        <field name="name">sale.order.form.cl.contact.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not cl_customer_approval_warning">
+                    <field name="cl_customer_approval_warning" readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

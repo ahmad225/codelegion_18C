@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Next to the customer's own pricelist; like it, kept on the company, not on its contacts -->
+    <record id="view_partner_form_inherit_cl_allowed_pricelist" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.cl.allowed.pricelist</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="product.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='parent_pricelists']" position="after">
+                <field name="cl_order_pricelist_ids"
+                       widget="many2many_tags"
+                       options="{'no_create': True}"
+                       placeholder="Any pricelist"
+                       groups="product.group_product_pricelist"
+                       invisible="not is_company and parent_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_inherit_cl_allowed_pricelist" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit.cl.allowed.pricelist</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Restricted Pricelists" name="cl_restricted_pricelists"
+                        domain="[('cl_order_pricelist_ids', '!=', False)]"
+                        groups="product.group_product_pricelist"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

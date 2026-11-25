@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Card on the portal home, with the customer's other sales documents.
+         Like every counted card it stays hidden while its count is 0. -->
+    <template id="portal_my_home_cl_reorder" name="Portal home: Previously Ordered"
+              inherit_id="portal.portal_my_home" priority="40" customize_show="True">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[@id='portal_client_category']" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
+                <t t-set="title">Previously Ordered</t>
+                <t t-set="url" t-value="'/my/previously-ordered'"/>
+                <t t-set="text">Buy again what you ordered before</t>
+                <t t-set="placeholder_count" t-value="'cl_reorder_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_breadcrumbs_cl_reorder" name="Portal breadcrumb: Previously Ordered"
+              inherit_id="portal.portal_breadcrumbs" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'cl_reorder'" class="breadcrumb-item active">Previously Ordered</li>
+        </xpath>
+    </template>
+
+    <!-- The page: one form for the whole list. Each row has its quantity and its
+         own button; "Add all to cart" sends every quantity as shown. -->
+    <template id="portal_reorder_page" name="Previously Ordered Products">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Previously Ordered</t>
+                <form t-if="total" t-att-action="page_url" method="get" class="d-flex" role="search">
+                    <div class="input-group">
+                        <input type="search" name="search" class="form-control border-0 bg-light"
+                               placeholder="Search a product or reference" t-att-value="search"/>
+                        <button type="submit" class="btn btn-light" aria-label="Search" title="Search">
+                            <i class="oi oi-search"/>
+                        </button>
+                    </div>
+                </form>
+            </t>
+
+            <div t-if="skipped" class="alert alert-warning" role="alert">
+                <t t-out="skipped"/> product(s) could not be added to your cart: they are no longer sold online.
+            </div>
+
+            <div t-if="not total" class="alert alert-info" role="status">
+                Nothing here yet. The products of your confirmed orders will be listed on this page,
+                ready to be ordered again.
+            </div>
+            <div t-elif="not entries" class="alert alert-info" role="status">
+                No previously ordered product matches <strong t-out="search"/>.
+                <a t-att-href="page_url">Show them all</a>
+            </div>
+
+            <form t-if="entries" t-attf-action="#{page_url}/add" method="post" class="o_cl_reorder">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <!-- A disabled first submit button: pressing Enter in a quantity
+                     field then submits nothing, instead of "Add all to cart" -->
+                <button type="submit" disabled="disabled" class="d-none" aria-hidden="true" tabindex="-1"/>
+                <div t-if="add_all" class="d-flex justify-content-end mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-shopping-cart me-1"/>Add all to cart
+                    </button>
+                </div>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Product</th>
+                            <th class="d-none d-md-table-cell">Last ordered</th>
+                            <th class="text-end" style="width: 13rem;">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="entries" t-as="entry">
+                            <t t-set="product" t-value="entry['product']"/>
+                            <td style="width: 64px;">
+                                <img t-attf-src="/web/image/product.product/#{product.id}/image_128"
+                                     class="img-fluid rounded" style="max-height: 48px;"
+                                     t-att-alt="product.name" loading="lazy"/>
+                            </td>
+                            <td>
+                                <a t-att-href="product.website_url" t-out="product.name"/>
+                                <div class="small text-muted">
+                                    <t t-if="product.default_code"><t t-out="product.default_code"/> · </t>
+                                    <t t-if="product.product_template_attribute_value_ids">
+                                        <t t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"/> ·
+                                    </t>
+                                    ordered <t t-out="entry['times']"/> time(s)
+                                </div>
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                <span t-out="entry['date']" t-options="{'widget': 'date'}"/>
+                                <div class="small text-muted">
+                                    <t t-out="entry['quantity']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    <t t-out="entry['uom'].name"/>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <div class="input-group input-group-sm justify-content-end flex-nowrap">
+                                    <input type="number" min="1" step="1" inputmode="numeric"
+                                           class="form-control text-end" style="max-width: 6rem;"
+                                           t-attf-name="qty_#{product.id}"
+                                           t-att-value="entry['cart_quantity']"
+                                           t-attf-aria-label="Quantity of #{product.name}"/>
+                                    <span class="input-group-text" t-out="entry['uom'].name"/>
+                                    <button type="submit" name="only" t-att-value="product.id"
+                                            class="btn btn-primary" title="Add to cart"
+                                            t-attf-aria-label="Add #{product.name} to cart">
+                                        <i class="fa fa-shopping-cart"/>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+            </form>
+        </t>
+    </template>
+</odoo>

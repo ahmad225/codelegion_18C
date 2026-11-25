@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cl_product_search_keyword_internal,cl.product.search.keyword internal user,model_cl_product_search_keyword,base.group_user,1,0,0,0
+access_cl_product_search_keyword_product_manager,cl.product.search.keyword product manager,model_cl_product_search_keyword,product.group_product_manager,1,1,1,1
+access_cl_product_search_keyword_sale_manager,cl.product.search.keyword sales manager,model_cl_product_search_keyword,sales_team.group_sale_manager,1,1,1,1
+access_cl_product_search_keyword_pos_manager,cl.product.search.keyword pos manager,model_cl_product_search_keyword,point_of_sale.group_pos_manager,1,1,1,1

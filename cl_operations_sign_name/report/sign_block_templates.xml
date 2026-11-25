@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Three boxes to fill in by hand. Printed once, at the end of the
+         document body, and kept together on one page. Needs "picking_type" in
+         the rendering context. -->
+    <template id="sign_block">
+        <div t-if="picking_type and picking_type.cl_sign_block"
+             class="o_cl_sign_block row mt-5" style="page-break-inside: avoid;">
+            <div class="col-4" name="cl_sign_name">
+                <div style="height: 14mm; border-bottom: 1px solid #000000;"/>
+                <small>Name</small>
+            </div>
+            <div class="col-4" name="cl_sign_date">
+                <div style="height: 14mm; border-bottom: 1px solid #000000;"/>
+                <small>Date and time</small>
+            </div>
+            <div class="col-4" name="cl_sign_signature">
+                <div style="height: 14mm; border-bottom: 1px solid #000000;"/>
+                <small>Signature</small>
+            </div>
+        </div>
+    </template>
+
+    <!-- Picking Operations: only this document, not the delivery slip, the
+         return slip or the labels, and never the company layout. -->
+    <template id="report_picking_sign_block" inherit_id="stock.report_picking">
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="cl_operations_sign_name.sign_block">
+                <t t-set="picking_type" t-value="o.picking_type_id"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Batch Transfer: follows the operation type of the batch -->
+    <template id="report_picking_batch_sign_block"
+              inherit_id="stock_picking_batch.report_picking_batch">
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-call="cl_operations_sign_name.sign_block">
+                <t t-set="picking_type" t-value="o.picking_type_id"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

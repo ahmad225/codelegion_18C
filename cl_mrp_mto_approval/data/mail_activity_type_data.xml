@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <data noupdate="1">
+        <record id="mail_act_cl_mto_approval" model="mail.activity.type">
+            <field name="name">Make-to-Order Approval</field>
+            <field name="icon">fa-check-square-o</field>
+            <field name="res_model">mrp.production</field>
+            <field name="category">default</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo noupdate="1">
+    <record id="seq_return_request" model="ir.sequence">
+        <field name="name">Return Request</field>
+        <field name="code">cl.return.request</field>
+        <field name="prefix">RET/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="activity_type_return_approval" model="mail.activity.type">
+        <field name="name">Approve Return</field>
+        <field name="summary">Decide on a return request</field>
+        <field name="icon">fa-check-square-o</field>
+        <field name="res_model">cl.return.request</field>
+        <field name="delay_count">0</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <!-- A starting set; rename, archive or add your own. -->
+    <record id="credit_reason_defective" model="cl.credit.note.reason">
+        <field name="name">Goods defective or damaged</field>
+        <field name="requires_return" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="credit_reason_not_ordered" model="cl.credit.note.reason">
+        <field name="name">Goods not as ordered</field>
+        <field name="requires_return" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="credit_reason_pricing" model="cl.credit.note.reason">
+        <field name="name">Invoicing or pricing error</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="credit_reason_goodwill" model="cl.credit.note.reason">
+        <field name="name">Commercial gesture</field>
+        <field name="sequence">40</field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_account_move_view_form_promotion_savings" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.cl.sale.auto.promotion</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_payments_widget']" position="before">
+                <div class="o_cl_promotion_savings text-end text-muted small" colspan="2"
+                     invisible="not cl_promotion_savings">
+                    Includes <field name="cl_promotion_savings" class="oe_inline fw-bold"/> of promotion savings
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

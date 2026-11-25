@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Sits next to Odoo's own "Product Packagings" option and only shows
+         when that option is on. -->
+    <record id="res_config_settings_view_form_cl_packaging" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.packaging.measurements</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='manage_product_packaging']" position="after">
+                <setting id="cl_packaging_measurements" company_dependent="1"
+                         string="Packaging Measurements"
+                         help="Units of the dimensions and gross weight recorded on product packagings."
+                         invisible="not group_stock_packaging">
+                    <div class="content-group">
+                        <div class="row mt8">
+                            <label for="cl_packaging_length_uom_id" string="Dimensions in" class="col-lg-4 o_light_label"/>
+                            <field name="cl_packaging_length_uom_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   required="group_stock_packaging"/>
+                        </div>
+                        <div>
+                            <field name="cl_packaging_length_uom_free"/>
+                            <label for="cl_packaging_length_uom_free" string="Each packaging can use its own dimension unit"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="cl_packaging_weight_uom_id" string="Gross weight in" class="col-lg-4 o_light_label"/>
+                            <field name="cl_packaging_weight_uom_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   required="group_stock_packaging"/>
+                        </div>
+                        <div>
+                            <field name="cl_packaging_weight_uom_free"/>
+                            <label for="cl_packaging_weight_uom_free" string="Each packaging can use its own weight unit"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

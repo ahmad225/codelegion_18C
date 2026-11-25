@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_credit_reason_user,credit.reason.user,model_cl_credit_note_reason,base.group_user,1,0,0,0
+access_credit_reason_manager,credit.reason.manager,model_cl_credit_note_reason,account.group_account_manager,1,1,1,1
+access_return_request_billing,return.request.billing,model_cl_return_request,account.group_account_invoice,1,1,1,0
+access_return_request_readonly,return.request.readonly,model_cl_return_request,account.group_account_readonly,1,0,0,0
+access_return_request_stock,return.request.stock,model_cl_return_request,stock.group_stock_user,1,0,0,0
+access_return_request_approver,return.request.approver,model_cl_return_request,group_cl_return_approver,1,1,0,0
+access_return_request_manager,return.request.manager,model_cl_return_request,account.group_account_manager,1,1,1,1
+access_return_request_line_billing,return.request.line.billing,model_cl_return_request_line,account.group_account_invoice,1,1,1,1
+access_return_request_line_readonly,return.request.line.readonly,model_cl_return_request_line,account.group_account_readonly,1,0,0,0
+access_return_request_line_stock,return.request.line.stock,model_cl_return_request_line,stock.group_stock_user,1,0,0,0
+access_return_analysis_billing,return.analysis.billing,model_cl_return_analysis,account.group_account_invoice,1,0,0,0
+access_return_analysis_readonly,return.analysis.readonly,model_cl_return_analysis,account.group_account_readonly,1,0,0,0

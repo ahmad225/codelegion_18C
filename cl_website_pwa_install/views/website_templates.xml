@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <template id="cl_pwa_layout" name="Website App Install (PWA)" inherit_id="website.layout">
+        <!-- Head: only when the website offers app install. The <head> of
+             website.layout is cached; website.write() clears that cache. -->
+        <xpath expr="//head" position="inside">
+            <t t-if="website.cl_pwa_enabled">
+                <link rel="manifest" href="/cl_pwa/manifest.webmanifest" crossorigin="use-credentials"/>
+                <meta name="theme-color" t-att-content="website.cl_pwa_theme_color or '#ffffff'"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+                <meta name="apple-mobile-web-app-title" t-att-content="website._cl_pwa_app_short_name()"/>
+                <link rel="apple-touch-icon" t-att-href="website._cl_pwa_apple_touch_icon_url()"/>
+                <!-- Keep the browser's install event before the (deferred)
+                     frontend bundle is loaded, so the homepage dialog can use it. -->
+                <script>
+                    window.addEventListener("beforeinstallprompt", function (ev) {
+                        ev.preventDefault();
+                        window.clPwaInstallPrompt = ev;
+                        window.dispatchEvent(new Event("cl-pwa-installprompt"));
+                    });
+                </script>
+            </t>
+        </xpath>
+
+        <!-- Install dialog: homepage only. Hidden until the frontend widget
+             knows this browser can install the site. It must sit inside
+             #wrapwrap: Odoo only starts frontend widgets found in there. -->
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <t t-if="website.cl_pwa_enabled and request.httprequest.path == (website.homepage_url or '/')">
+                <div id="cl_pwa_install" class="cl-pwa-install o_not_editable" hidden="hidden">
+                    <div class="cl-pwa-install-backdrop" data-cl-pwa-action="later"/>
+                    <div class="cl-pwa-install-dialog" role="dialog" aria-modal="true" tabindex="-1"
+                         aria-labelledby="cl_pwa_install_title" aria-describedby="cl_pwa_install_text">
+                        <button type="button" class="btn-close cl-pwa-install-close"
+                                data-cl-pwa-action="later" aria-label="Close" title="Close"/>
+                        <div class="cl-pwa-install-header d-flex align-items-center gap-3 mb-3">
+                            <img class="cl-pwa-install-icon" t-att-src="website._cl_pwa_dialog_icon_url()"
+                                 alt="" width="64" height="64" loading="lazy"/>
+                            <div>
+                                <h2 id="cl_pwa_install_title" class="h5 mb-1" t-esc="website._cl_pwa_app_name()"/>
+                                <p id="cl_pwa_install_text" class="mb-0 text-muted">Install our app for quick, full-screen access right from your device.</p>
+                            </div>
+                        </div>
+                        <div data-cl-pwa-variant="prompt" hidden="hidden">
+                            <button type="button" class="btn btn-primary w-100" data-cl-pwa-action="install">Install</button>
+                        </div>
+                        <div data-cl-pwa-variant="ios" hidden="hidden">
+                            <ol class="cl-pwa-install-steps">
+                                <li>Tap the <strong>Share</strong> button <i class="fa fa-share-square-o" aria-hidden="true"/> in Safari.</li>
+                                <li>Choose <strong>Add to Home Screen</strong>.</li>
+                                <li>Tap <strong>Add</strong>.</li>
+                            </ol>
+                        </div>
+                        <div data-cl-pwa-variant="macos" hidden="hidden">
+                            <ol class="cl-pwa-install-steps">
+                                <li>Click the <strong>Share</strong> button <i class="fa fa-share-square-o" aria-hidden="true"/> in the Safari toolbar, or open the <strong>File</strong> menu.</li>
+                                <li>Choose <strong>Add to Dock</strong>.</li>
+                                <li>Click <strong>Add</strong>.</li>
+                            </ol>
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+                            <button type="button" class="btn btn-link px-0" data-cl-pwa-action="never">Don't show again</button>
+                            <button type="button" class="btn btn-secondary" data-cl-pwa-action="later">Not now</button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Page shown by the service worker when a page cannot be loaded offline.
+         Self-contained: no request can be made to load anything else. -->
+    <template id="cl_pwa_offline_page" name="App Offline Page">&lt;!DOCTYPE html&gt;
+<html t-att-lang="lang">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title t-esc="app_name"/>
+        <style>
+            body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+                   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+            main { max-width: 26rem; margin: 1rem; padding: 2rem; border-radius: 0.75rem; text-align: center;
+                   background: #ffffff; color: #212529; box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15); }
+            h1 { font-size: 1.5rem; margin: 0 0 0.75rem; }
+            p { margin: 0 0 1.5rem; line-height: 1.5; }
+            button { font: inherit; padding: 0.5rem 1.5rem; border-radius: 0.375rem; border: 1px solid #212529;
+                     background: #212529; color: #ffffff; cursor: pointer; }
+        </style>
+    </head>
+    <body t-attf-style="background-color: {{ website.cl_pwa_background_color or '#ffffff' }};">
+        <main>
+            <h1>You are offline</h1>
+            <p>This page cannot be loaded without an internet connection. Check your connection and try again.</p>
+            <button type="button" onclick="window.location.reload()">Try again</button>
+        </main>
+    </body>
+</html>
+    </template>
+</odoo>

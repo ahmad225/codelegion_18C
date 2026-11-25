@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <template id="cl_report_saleorder_document_promotion_savings" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='so_total_summary']" position="after">
+            <t t-set="cl_promotions" t-value="doc._cl_get_applied_promotions()"/>
+            <div t-if="cl_promotions or doc.cl_promotion_savings"
+                 class="o_cl_applied_promotions mt-3 small" style="page-break-inside: avoid;">
+                <p t-if="doc.cl_promotion_savings" class="o_cl_promotion_savings mb-1">
+                    This offer includes <strong t-field="doc.cl_promotion_savings"/> of promotion savings.
+                </p>
+                <t t-foreach="cl_promotions" t-as="cl_promotion">
+                    <div>
+                        <i class="fa fa-tag me-1" role="img" aria-label="Promotion"/>
+                        <span t-field="cl_promotion.name"/>
+                        <span t-if="cl_promotion.date_to and doc.state in ('draft', 'sent')" class="text-muted">
+                            (until <span t-field="cl_promotion.date_to"/>)
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

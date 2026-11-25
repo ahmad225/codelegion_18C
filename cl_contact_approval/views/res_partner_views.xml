@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_partner_form_cl_contact_approval" model="ir.ui.view">
+        <field name="name">res.partner.form.cl.contact.approval</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='warning_tax']" position="before">
+                <!-- Approval is held by the commercial partner only. -->
+                <header invisible="not cl_approval_enabled or (parent_id and not is_company)">
+                    <field name="cl_approval_enabled" invisible="1"/>
+                    <button name="action_cl_send_for_approval" type="object" string="Send for Approval"
+                            class="btn-primary" invisible="not id or cl_approval_state != 'draft'"/>
+                    <button name="action_cl_approve" type="object" string="Approve" class="btn-primary"
+                            invisible="cl_approval_state != 'pending'"
+                            groups="cl_contact_approval.group_cl_contact_approver"/>
+                    <button name="action_cl_approve" type="object" string="Approve"
+                            invisible="not id or cl_approval_state != 'draft'"
+                            groups="cl_contact_approval.group_cl_contact_approver"/>
+                    <button name="action_cl_reject" type="object" string="Reject"
+                            invisible="cl_approval_state != 'pending'"
+                            groups="cl_contact_approval.group_cl_contact_approver"
+                            confirm="Reject this customer? It goes back to Draft and the requester is notified."/>
+                    <button name="action_cl_revoke_approval" type="object" string="Revoke Approval"
+                            invisible="cl_approval_state != 'approved'"
+                            groups="cl_contact_approval.group_cl_contact_approver"
+                            confirm="Revoke the approval of this customer? It goes back to Draft and its quotations cannot be confirmed until it is approved again."/>
+                    <field name="cl_approval_state" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not id or not cl_approval_enabled or cl_approval_state == 'approved'">
+                    <span invisible="parent_id and not is_company">
+                        <strong>Not approved yet.</strong>
+                        Sales orders for this customer cannot be confirmed until it is approved.
+                    </span>
+                    <span invisible="not parent_id or is_company">
+                        <strong>The company of this contact is not approved yet.</strong>
+                        Sales orders for this contact cannot be confirmed until the company is approved.
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_tree_cl_contact_approval" model="ir.ui.view">
+        <field name="name">res.partner.list.cl.contact.approval</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="cl_approval_state" optional="hide" readonly="1" widget="badge"
+                       decoration-success="cl_approval_state == 'approved'"
+                       decoration-warning="cl_approval_state == 'pending'"
+                       decoration-muted="cl_approval_state == 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_cl_contact_approval" model="ir.ui.view">
+        <field name="name">res.partner.search.cl.contact.approval</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Pending Approval" name="cl_pending_approval"
+                        domain="[('cl_approval_state', '=', 'pending')]"/>
+                <filter string="Not Approved" name="cl_not_approved"
+                        domain="[('cl_approval_state', '!=', 'approved')]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group[@name='group_by']" position="inside">
+                <filter string="Approval Status" name="cl_group_approval_state"
+                        context="{'group_by': 'cl_approval_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_cl_customers_to_approve" model="ir.actions.act_window">
+        <field name="name">Customers to Approve</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="domain">[('cl_approval_state', '!=', 'approved'), '|', ('is_company', '=', True), ('parent_id', '=', False)]</field>
+        <field name="context">{'search_default_cl_pending_approval': 1, 'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No customers waiting for approval.</p>
+            <p>Customers appear here once a salesperson clicks <b>Send for Approval</b> on them.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cl_customers_to_approve"
+              name="Customers to Approve"
+              parent="sale.sale_order_menu"
+              action="action_cl_customers_to_approve"
+              groups="cl_contact_approval.group_cl_contact_approver"
+              sequence="45"/>
+
+    <record id="action_server_cl_mass_approve" model="ir.actions.server">
+        <field name="name">Approve Customers</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('cl_contact_approval.group_cl_contact_approver'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_cl_mass_approve()</field>
+    </record>
+
+    <record id="action_server_cl_mass_send_for_approval" model="ir.actions.server">
+        <field name="name">Send for Approval</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_cl_mass_send_for_approval()</field>
+    </record>
+</odoo>

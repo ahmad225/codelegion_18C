@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!--
+        Instructions for the shop floor, printed as a two-column "label | text" table
+        between the product block and the operations of Odoo's Production Order.
+        The text converter already turns line breaks into <br/>, so no extra styling.
+    -->
+    <template id="report_mrporder_inherit_cl_description" inherit_id="mrp.report_mrporder">
+        <xpath expr="//span[@t-field='o.product_id']/ancestor::div[hasclass('row')][1]" position="after">
+            <t t-set="cl_instructions" t-value="o.cl_mo_description"/>
+            <t t-set="cl_floor_note" t-value="o.cl_shop_floor_note"/>
+            <table t-if="cl_instructions or cl_floor_note"
+                   class="table table-sm table-borderless cl_mo_description_block mb-4">
+                <tbody>
+                    <tr t-if="cl_instructions">
+                        <th scope="row" style="width: 22%;">Description</th>
+                        <td><span t-field="o.cl_mo_description"/></td>
+                    </tr>
+                    <tr t-if="cl_floor_note">
+                        <th scope="row" style="width: 22%;">Shop Floor Note</th>
+                        <td><span t-field="o.cl_shop_floor_note"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>

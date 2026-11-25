@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="mrp_production_form_view_cl_handover" model="ir.ui.view">
+        <field name="name">mrp.production.form.cl.handover</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_unbuild']" position="after">
+                <button name="action_cl_hand_over" type="object" string="Hand Over to Warehouse"
+                        class="oe_highlight"
+                        invisible="state != 'done' or cl_handed_over or not cl_handover_applicable"
+                        groups="mrp.group_mrp_user"/>
+                <button name="action_cl_undo_handover" type="object" string="Undo Handover"
+                        invisible="not cl_handed_over"
+                        groups="mrp.group_mrp_manager"
+                        confirm="The salesperson will be told the order is no longer ready for delivery. Undo the handover?"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not cl_event_at_risk">
+                    <strong>Customer event on <field name="cl_event_date" readonly="1" class="oe_inline"/>:</strong>
+                    this order is planned to finish after the event.
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="after">
+                <field name="cl_handover_applicable" invisible="1"/>
+                <field name="cl_event_at_risk" invisible="1"/>
+                <widget name="web_ribbon" title="Handed Over" bg_color="text-bg-success"
+                        invisible="not cl_handed_over"/>
+            </xpath>
+            <xpath expr="//field[@name='date_finished'][@string='Scheduled End']" position="after">
+                <field name="cl_event_date" invisible="not cl_event_date"
+                       decoration-danger="cl_event_at_risk" decoration-bf="cl_event_at_risk"/>
+                <field name="cl_event_note" invisible="not cl_event_note"/>
+            </xpath>
+            <xpath expr="//page[@name='miscellaneous']/group" position="after">
+                <group name="cl_handover" string="Sales Handover" invisible="not cl_handed_over and not cl_handover_applicable">
+                    <group>
+                        <field name="cl_sale_order_id" groups="sales_team.group_sale_salesman"/>
+                        <field name="cl_handed_over"/>
+                    </group>
+                    <group invisible="not cl_handed_over">
+                        <field name="cl_handover_date"/>
+                        <field name="cl_handover_user_id" widget="many2one_avatar_user"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_tree_view_cl_handover" model="ir.ui.view">
+        <field name="name">mrp.production.list.cl.handover</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="cl_event_at_risk" column_invisible="True"/>
+                <field name="cl_event_date" optional="show"
+                       decoration-danger="cl_event_at_risk" decoration-bf="cl_event_at_risk"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="cl_handed_over" optional="hide" widget="boolean"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_production_filter_cl_handover" model="ir.ui.view">
+        <field name="name">mrp.production.search.cl.handover</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='planning_issues']" position="after">
+                <separator/>
+                <filter string="With Event Date" name="cl_with_event_date"
+                        domain="[('cl_event_date', '!=', False)]"/>
+                <filter string="Done, Not Handed Over" name="cl_to_hand_over"
+                        domain="[('state', '=', 'done'), ('cl_handed_over', '=', False), ('cl_sale_order_id', '!=', False)]"/>
+                <filter string="Handed Over" name="cl_handed_over"
+                        domain="[('cl_handed_over', '=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='procurement_group_id']" position="after">
+                <filter string="Event Date" name="cl_groupby_event_date" domain="[]"
+                        context="{'group_by': 'cl_event_date:day'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

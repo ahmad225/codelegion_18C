@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_cl_collection_ready" model="mail.template">
+            <field name="name">Collection: Ready for Collection</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">{{ object.company_id.name }}: your order {{ object.sale_id.name or object.origin or object.name }} is ready for collection</field>
+            <field name="email_from">{{ (object.sale_id.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ (object.sale_id.partner_id or object.partner_id).id }}</field>
+            <field name="description">Sent to the customer once, when the delivery order of a customer-collection order is ready</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="(object.sale_id.partner_id or object.partner_id).name or ''">Customer</t>,<br/><br/>
+        Good news: your order <strong t-out="object.sale_id.name or object.origin or ''">S00001</strong>
+        is ready for collection.<br/><br/>
+        Collection reference: <strong t-out="object.name or ''">WH/OUT/00001</strong><br/>
+        <t t-if="object.picking_type_id.warehouse_id.partner_id">
+            Collection address: <t t-out="object.picking_type_id.warehouse_id.partner_id.contact_address or ''">Warehouse address</t><br/>
+        </t>
+        <br/>
+        Please mention the collection reference when you come by.<br/><br/>
+        Kind regards,<br/>
+        <t t-out="object.company_id.name or ''">My Company</t>
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ (object.sale_id.partner_id or object.partner_id).lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_cl_collection_reminder" model="mail.template">
+            <field name="name">Collection: Reminder</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">Reminder: your order {{ object.sale_id.name or object.origin or object.name }} is waiting for collection</field>
+            <field name="email_from">{{ (object.sale_id.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ (object.sale_id.partner_id or object.partner_id).id }}</field>
+            <field name="description">Reminder sent by the daily job while a ready customer-collection order is not collected</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="(object.sale_id.partner_id or object.partner_id).name or ''">Customer</t>,<br/><br/>
+        A friendly reminder: your order <strong t-out="object.sale_id.name or object.origin or ''">S00001</strong>
+        is still waiting for you.<br/><br/>
+        Collection reference: <strong t-out="object.name or ''">WH/OUT/00001</strong><br/>
+        <t t-if="object.picking_type_id.warehouse_id.partner_id">
+            Collection address: <t t-out="object.picking_type_id.warehouse_id.partner_id.contact_address or ''">Warehouse address</t><br/>
+        </t>
+        <br/>
+        If you have already collected it or need another arrangement, just reply to this email.<br/><br/>
+        Kind regards,<br/>
+        <t t-out="object.company_id.name or ''">My Company</t>
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ (object.sale_id.partner_id or object.partner_id).lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

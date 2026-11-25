@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- The form shared by products and product variants: one place for the
+         keywords of the product, on the General Information tab. -->
+    <record id="product_template_form_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.template.form.cl.keyword.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_general']" position="inside">
+                <field name="cl_search_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}"
+                       placeholder="Other words people search this product by"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- On a variant: the extra keywords of that variant, only useful when
+         the product has several variants. -->
+    <record id="product_normal_form_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.product.form.cl.keyword.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='cl_search_keyword_ids']" position="after">
+                <field name="cl_variant_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}"
+                       invisible="product_variant_count &lt;= 1"
+                       placeholder="Extra words for this variant only"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_variant_easy_edit_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.product.easy.form.cl.keyword.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sales']" position="inside">
+                <field name="cl_search_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}" readonly="1"/>
+                <field name="cl_variant_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}"
+                       placeholder="Extra words for this variant only"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Lists -->
+    <record id="product_template_tree_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.template.list.cl.keyword.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tag_ids']" position="after">
+                <field name="cl_search_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.product.list.cl.keyword.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='additional_product_tag_ids']" position="after">
+                <field name="cl_search_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}" readonly="1" optional="hide"/>
+                <field name="cl_variant_keyword_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search bars of the product lists: "Search Keyword" as a search field,
+         and a filter to find the products that still have none. -->
+    <record id="product_template_search_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.template.search.cl.keyword.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tag_ids']" position="after">
+                <field name="cl_keyword_search_text"/>
+            </xpath>
+            <xpath expr="//filter[@name='goods']" position="before">
+                <filter string="Without Search Keywords" name="cl_without_keywords"
+                        domain="[('cl_keyword_search_text', '=', False)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- The variant search is derived from the product search: point both
+         additions at the text of the variant. -->
+    <record id="product_search_form_view_cl_keyword_search" model="ir.ui.view">
+        <field name="name">product.product.search.cl.keyword.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='cl_keyword_search_text']" position="replace">
+                <field name="cl_variant_search_text"/>
+            </xpath>
+            <xpath expr="//filter[@name='cl_without_keywords']" position="attributes">
+                <attribute name="domain">[('cl_variant_search_text', '=', False)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

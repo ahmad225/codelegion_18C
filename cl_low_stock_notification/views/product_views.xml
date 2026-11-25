@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Inventory tab of the product form. This view extends the form shared by
+         product templates and variants, so one definition serves both; on a
+         template with several variants the value is set on each variant. -->
+    <record id="product_template_form_inherit_cl_low_stock" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.cl.low.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='operations']" position="inside">
+                <field name="cl_low_stock_min_qty"
+                       invisible="not is_storable or (product_variant_count &gt; 1 and not is_product_variant)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Variant pop-up opened from the template's list of variants -->
+    <record id="product_variant_easy_edit_inherit_cl_low_stock" model="ir.ui.view">
+        <field name="name">product.product.easy.edit.inherit.cl.low.stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='weight']" position="inside">
+                <field name="cl_low_stock_min_qty"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

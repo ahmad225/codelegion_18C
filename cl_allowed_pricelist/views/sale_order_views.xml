@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_order_form_inherit_cl_allowed_pricelist" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.cl.allowed.pricelist</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- The pricelist selector people use (the second, hidden one is not a selector) -->
+            <xpath expr="//group[@name='order_details']//field[@name='pricelist_id'][not(@invisible)]" position="attributes">
+                <attribute name="domain">cl_pricelist_domain</attribute>
+            </xpath>
+            <xpath expr="//group[@name='order_details']" position="inside">
+                <field name="cl_pricelist_domain" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

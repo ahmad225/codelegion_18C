@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_artwork_view_list" model="ir.ui.view">
+        <field name="name">cl.artwork.list</field>
+        <field name="model">cl.artwork</field>
+        <field name="arch" type="xml">
+            <list string="Customer Artwork" sample="1">
+                <field name="name"/>
+                <field name="cl_version" string="Version"/>
+                <field name="partner_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="product_id" optional="hide" groups="product.group_product_variant"/>
+                <field name="cl_designer_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="cl_sale_order_id" optional="show"/>
+                <field name="cl_approved_date" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('design', 'rework')"
+                       decoration-warning="state == 'review'"
+                       decoration-success="state == 'approved'"
+                       decoration-muted="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cl_artwork_view_kanban" model="ir.ui.view">
+        <field name="name">cl.artwork.kanban</field>
+        <field name="model">cl.artwork</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <field name="cl_proof_preview" widget="image" options="{'size': [90, 90]}"
+                                   invisible="not cl_proof_preview"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="display_name" class="fw-bold"/>
+                            <field name="partner_id"/>
+                            <field name="product_tmpl_id" class="text-muted"/>
+                            <footer class="pt-1">
+                                <field name="activity_ids" widget="kanban_activity"/>
+                                <field name="state" widget="badge" class="ms-auto"
+                                       decoration-info="state in ('design', 'rework')"
+                                       decoration-warning="state == 'review'"
+                                       decoration-success="state == 'approved'"/>
+                                <field name="cl_designer_id" widget="many2one_avatar_user"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="cl_artwork_view_form" model="ir.ui.view">
+        <field name="name">cl.artwork.form</field>
+        <field name="model">cl.artwork</field>
+        <field name="arch" type="xml">
+            <form string="Customer Artwork">
+                <header>
+                    <button name="action_cl_send_to_designer" type="object" string="Send to Designer"
+                            class="btn-primary" invisible="state != 'draft' or not cl_is_sales_user"/>
+                    <button name="action_cl_submit_proof" type="object" string="Proof Ready"
+                            class="btn-primary" invisible="state not in ('design', 'rework')"/>
+                    <button name="action_cl_submit_proof" type="object" string="Proof Ready"
+                            invisible="state != 'draft' or not cl_is_sales_user"
+                            help="The customer already supplied a print-ready file: review it without a designer."/>
+                    <button name="action_cl_approve" type="object" string="Approve" class="btn-primary"
+                            invisible="state != 'review' or not cl_is_sales_user"/>
+                    <button name="action_cl_request_rework" type="object" string="Request Rework"
+                            invisible="state != 'review' or not cl_is_sales_user"/>
+                    <button name="action_cl_new_version" type="object" string="New Version"
+                            invisible="state != 'approved' or not cl_is_sales_user"/>
+                    <button name="action_cl_cancel" type="object" string="Cancel"
+                            invisible="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                    <button name="action_cl_reset_to_draft" type="object" string="Reset to Draft"
+                            invisible="state != 'cancel' or not cl_is_sales_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,design,review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_cl_view_sale_orders" type="object" class="oe_stat_button"
+                                icon="fa-dollar" invisible="cl_sale_order_count == 0"
+                                groups="sales_team.group_sale_salesman">
+                            <field name="cl_sale_order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button name="action_cl_view_productions" type="object" class="oe_stat_button"
+                                icon="fa-wrench" invisible="cl_production_count == 0"
+                                groups="mrp.group_mrp_user">
+                            <field name="cl_production_count" widget="statinfo" string="Manufacturing"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="cl_is_sales_user" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Front logo, two colours"
+                                   readonly="not cl_is_sales_user"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                            <field name="product_tmpl_id" readonly="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                            <field name="product_id" groups="product.group_product_variant"
+                                   readonly="state in ('approved', 'cancel') or not cl_is_sales_user"
+                                   placeholder="All variants"/>
+                            <field name="cl_sale_order_id" readonly="not cl_is_sales_user"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                   readonly="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                        </group>
+                        <group>
+                            <field name="cl_version"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="not cl_is_sales_user"/>
+                            <field name="cl_designer_id" widget="many2one_avatar_user"
+                                   readonly="state in ('review', 'approved', 'cancel') or not cl_is_sales_user"/>
+                            <field name="cl_approved_by_id" invisible="state != 'approved'"/>
+                            <field name="cl_approved_date" invisible="state != 'approved'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Brief" name="cl_brief">
+                            <group>
+                                <field name="cl_source_filename" invisible="1"/>
+                                <field name="cl_source_file" filename="cl_source_filename"
+                                       readonly="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                                <field name="cl_brief" placeholder="Colours, position, size, wording..."
+                                       readonly="state in ('approved', 'cancel') or not cl_is_sales_user"/>
+                            </group>
+                        </page>
+                        <page string="Proof" name="cl_proof">
+                            <div class="alert alert-warning" role="alert" invisible="state != 'rework' or not cl_rework_note">
+                                <strong>Rework requested:</strong>
+                                <field name="cl_rework_note" nolabel="1"/>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="cl_proof_filename" invisible="1"/>
+                                    <field name="cl_proof_file" filename="cl_proof_filename"
+                                           readonly="state not in ('draft', 'design', 'rework')"/>
+                                    <field name="cl_proof_count"/>
+                                    <field name="cl_designer_note"
+                                           readonly="state in ('approved', 'cancel')"/>
+                                </group>
+                                <group>
+                                    <field name="cl_proof_preview" widget="image" options="{'size': [0, 240]}"
+                                           readonly="state not in ('draft', 'design', 'rework')"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="cl_artwork_view_search" model="ir.ui.view">
+        <field name="name">cl.artwork.search</field>
+        <field name="model">cl.artwork</field>
+        <field name="arch" type="xml">
+            <search string="Customer Artwork">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="cl_designer_id"/>
+                <field name="cl_sale_order_id"/>
+                <filter string="My Designs" name="cl_my_designs" domain="[('cl_designer_id', '=', uid)]"/>
+                <filter string="My Customers" name="cl_my_artwork" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="To Design" name="cl_to_design" domain="[('state', 'in', ('design', 'rework'))]"/>
+                <filter string="To Review" name="cl_to_review" domain="[('state', '=', 'review')]"/>
+                <filter string="Approved" name="cl_approved" domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="cl_group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product" name="cl_group_product" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Designer" name="cl_group_designer" context="{'group_by': 'cl_designer_id'}"/>
+                    <filter string="Status" name="cl_group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_cl_artwork" model="ir.actions.act_window">
+        <field name="name">Customer Artwork</field>
+        <field name="res_model">cl.artwork</field>
+        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="search_view_id" ref="cl_artwork_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No customer artwork yet.</p>
+            <p>Add artwork from the Artwork tab of a quotation, send it to a designer and approve the proof.
+               Approved artwork is used again on the customer's next order.</p>
+        </field>
+    </record>
+
+    <record id="action_cl_artwork_design" model="ir.actions.act_window">
+        <field name="name">My Design Work</field>
+        <field name="res_model">cl.artwork</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="search_view_id" ref="cl_artwork_view_search"/>
+        <field name="context">{'search_default_cl_my_designs': 1, 'search_default_cl_to_design': 1, 'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing to design.</p>
+            <p>Artwork sent to you by a salesperson appears here and in your activities.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cl_artwork_sale"
+              name="Customer Artwork"
+              parent="sale.sale_order_menu"
+              action="action_cl_artwork"
+              groups="sales_team.group_sale_salesman"
+              sequence="25"/>
+
+    <!-- Designers do not need the Sales app. -->
+    <menuitem id="menu_cl_artwork_root"
+              name="Artwork"
+              groups="group_cl_artwork_designer"
+              sequence="45"/>
+    <menuitem id="menu_cl_artwork_design"
+              name="My Design Work"
+              parent="menu_cl_artwork_root"
+              action="action_cl_artwork_design"
+              sequence="10"/>
+    <menuitem id="menu_cl_artwork_all"
+              name="All Artwork"
+              parent="menu_cl_artwork_root"
+              action="action_cl_artwork"
+              sequence="20"/>
+</odoo>

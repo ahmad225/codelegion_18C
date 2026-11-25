@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_handover" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.handover</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='mrp']" position="inside">
+                <block title="Sales Handover" name="cl_handover_setting_container">
+                    <setting id="cl_handover_date_sync" company_dependent="1"
+                             string="Delivery Date from Manufacturing"
+                             help="How the sales order Delivery Date follows its manufacturing orders (the latest one counts).">
+                        <field name="cl_handover_date_sync" widget="radio"/>
+                        <div class="mt8" invisible="cl_handover_date_sync == 'none'">
+                            <field name="cl_handover_move_agreed_date" class="oe_inline"/>
+                            <label for="cl_handover_move_agreed_date" string="Also move dates agreed with the customer (later only, with a note)"/>
+                        </div>
+                    </setting>
+                    <setting id="cl_handover_notify" company_dependent="1"
+                             help="Hand over finished manufacturing orders; the salesperson gets a Ready for Delivery activity.">
+                        <field name="cl_handover_notify"/>
+                    </setting>
+                    <setting id="cl_handover_event_date" company_dependent="1"
+                             help="Customer event date on sales orders, shown on their manufacturing orders.">
+                        <field name="cl_handover_event_date"/>
+                    </setting>
+                    <setting id="cl_handover_collection_email" company_dependent="1"
+                             help="Email the customer when a delivery order with a Customer Collection delivery method is ready, then remind them.">
+                        <field name="cl_handover_collection_email"/>
+                        <div class="content-group mt8" invisible="not cl_handover_collection_email">
+                            <div>
+                                Remind every <field name="cl_handover_reminder_days" class="oe_inline"/> day(s),
+                                at most <field name="cl_handover_reminder_max" class="oe_inline"/> time(s) (0 = no reminders).
+                            </div>
+                            <div class="mt8">
+                                <button name="%(delivery.action_delivery_carrier_form)d" type="action"
+                                        string="Delivery Methods" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

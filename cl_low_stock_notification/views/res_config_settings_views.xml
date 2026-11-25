@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_low_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.low.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='stock']" position="inside">
+                <block title="Low Stock Alerts" name="cl_low_stock_block">
+                    <setting id="cl_low_stock_alert_setting" company_dependent="1"
+                             help="E-mail the products that are below their minimum stock every day, with the full list as an Excel file.">
+                        <field name="cl_low_stock_alert"/>
+                        <div class="content-group" invisible="not cl_low_stock_alert">
+                            <div class="mt16">
+                                <label for="cl_low_stock_user_ids" string="Recipients" class="o_light_label"/>
+                                <field name="cl_low_stock_user_ids" widget="many2many_tags"
+                                       domain="[('share', '=', False)]"
+                                       options="{'no_create': True}"
+                                       required="cl_low_stock_alert"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="cl_low_stock_tz" string="Timezone" class="col-lg-4 o_light_label"/>
+                                <field name="cl_low_stock_tz"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="cl_low_stock_threshold_setting" company_dependent="1"
+                             string="Minimum Stock"
+                             help="Where the minimum of each product comes from."
+                             invisible="not cl_low_stock_alert">
+                        <field name="cl_low_stock_source" widget="radio"/>
+                        <div class="row mt8" invisible="cl_low_stock_source != 'company'">
+                            <label for="cl_low_stock_min_qty" string="Minimum" class="col-lg-4 o_light_label"/>
+                            <field name="cl_low_stock_min_qty"/>
+                        </div>
+                        <div class="text-muted mt8" invisible="cl_low_stock_source != 'product'">
+                            Set "Low Stock Below" in the Inventory tab of each product.
+                        </div>
+                    </setting>
+                    <setting id="cl_low_stock_scope_setting" company_dependent="1"
+                             string="Stock Compared"
+                             help="Which quantity is compared with the minimum, and where it is counted."
+                             invisible="not cl_low_stock_alert">
+                        <field name="cl_low_stock_basis" widget="radio"/>
+                        <div class="mt8">
+                            <label for="cl_low_stock_location_ids" string="Only these locations" class="o_light_label"/>
+                            <field name="cl_low_stock_location_ids" widget="many2many_tags"
+                                   domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]"
+                                   options="{'no_create': True}"
+                                   placeholder="All warehouses"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

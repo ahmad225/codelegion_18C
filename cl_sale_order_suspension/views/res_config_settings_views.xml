@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_suspension" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.suspension</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="inside">
+                <setting id="cl_suspension_followup" company_dependent="1"
+                         string="Suspended Quotations"
+                         help="Default number of days before the follow-up of a suspended quotation is due.">
+                    <field name="cl_suspension_followup_days"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

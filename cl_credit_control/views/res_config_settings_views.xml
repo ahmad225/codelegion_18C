@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_credit_control" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cl.credit.control</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="after">
+                <block title="Credit Control" name="cl_credit_control_setting_container">
+                    <setting id="cl_credit_block_overdue" company_dependent="1"
+                             help="Quotations need a Credit Manager's approval when the customer has invoices overdue by more than the allowed days.">
+                        <field name="cl_credit_block_overdue"/>
+                        <div class="content-group" invisible="not cl_credit_block_overdue">
+                            <field name="cl_credit_currency_id" invisible="1"/>
+                            <div class="row mt8">
+                                <label for="cl_credit_grace_days" class="col-lg-6 o_light_label"/>
+                                <field name="cl_credit_grace_days" class="col-lg-3"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="cl_credit_min_overdue_amount" class="col-lg-6 o_light_label"/>
+                                <field name="cl_credit_min_overdue_amount" class="col-lg-4"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="cl_credit_block_limit" company_dependent="1"
+                             help="Quotations need approval when the order would take the customer over the credit limit set on the customer. Odoo alone only shows a warning.">
+                        <field name="cl_credit_block_limit"/>
+                    </setting>
+                    <setting id="cl_credit_skip_automatic" company_dependent="1"
+                             help="Orders confirmed by online payment, customer signature or other automations are confirmed anyway, with a note on the order. Untick to block them as well.">
+                        <field name="cl_credit_skip_automatic"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

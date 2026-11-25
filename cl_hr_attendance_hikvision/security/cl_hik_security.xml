@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- No new groups: Attendance Officers read devices and punches, Attendance
+         Administrators manage devices and run syncs. Nobody can edit punches. -->
+    <data noupdate="1">
+        <record id="cl_hik_device_rule_company" model="ir.rule">
+            <field name="name">Hikvision Device: multi-company</field>
+            <field name="model_id" ref="model_cl_hik_device"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="cl_hik_punch_rule_company" model="ir.rule">
+            <field name="name">Hikvision Punch: multi-company</field>
+            <field name="model_id" ref="model_cl_hik_punch"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- Like hr.attendance: officers see the punches of the employees they manage. -->
+        <record id="cl_hik_punch_rule_officer" model="ir.rule">
+            <field name="name">Hikvision Punch: officers see their managed employees</field>
+            <field name="model_id" ref="model_cl_hik_punch"/>
+            <field name="domain_force">[('employee_id.attendance_manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+        </record>
+
+        <record id="cl_hik_punch_rule_manager" model="ir.rule">
+            <field name="name">Hikvision Punch: administrators see all punches</field>
+            <field name="model_id" ref="model_cl_hik_punch"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+        </record>
+    </data>
+</odoo>

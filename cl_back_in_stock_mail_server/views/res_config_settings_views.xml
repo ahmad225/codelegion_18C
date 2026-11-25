@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_back_in_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.back.in.stock.mail.server</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale_stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='product_availability_setting']" position="after">
+                <setting id="cl_back_in_stock_mail_server_setting"
+                         string="Back-in-Stock Email Server"
+                         company_dependent="1"
+                         help="Outgoing mail server for the 'product is back in stock' emails of this website's company. Leave empty for the default.">
+                    <field name="cl_back_in_stock_mail_server_id"
+                           options="{'no_create': True}" placeholder="Default server"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

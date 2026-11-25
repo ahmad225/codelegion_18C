@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reminder_stage_billing,reminder.stage.billing,model_cl_invoice_reminder_stage,account.group_account_invoice,1,0,0,0
+access_reminder_stage_readonly,reminder.stage.readonly,model_cl_invoice_reminder_stage,account.group_account_readonly,1,0,0,0
+access_reminder_stage_manager,reminder.stage.manager,model_cl_invoice_reminder_stage,account.group_account_manager,1,1,1,1
+access_reminder_log_billing,reminder.log.billing,model_cl_invoice_reminder_log,account.group_account_invoice,1,0,0,0
+access_reminder_log_readonly,reminder.log.readonly,model_cl_invoice_reminder_log,account.group_account_readonly,1,0,0,0
+access_reminder_log_manager,reminder.log.manager,model_cl_invoice_reminder_log,account.group_account_manager,1,0,0,1

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="view_cl_credit_approval_request_form" model="ir.ui.view">
+        <field name="name">cl.credit.approval.request.form</field>
+        <field name="model">cl.credit.approval.request</field>
+        <field name="arch" type="xml">
+            <form string="Credit Block">
+                <field name="cl_credit_state" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="cl_credit_state != 'to_approve'">
+                    This quotation is already waiting for credit approval.
+                </div>
+                <group>
+                    <field name="order_id"/>
+                    <field name="partner_id"/>
+                </group>
+                <separator string="Why it is blocked"/>
+                <field name="reason_html" nolabel="1" colspan="2"/>
+                <div invisible="not overdue_html">
+                    <separator string="Overdue items"/>
+                    <field name="overdue_html" nolabel="1"/>
+                </div>
+                <group>
+                    <field name="note" placeholder="e.g. Customer has promised payment by Friday"/>
+                </group>
+                <footer>
+                    <button name="action_request" type="object" string="Request Approval"
+                            class="btn-primary" data-hotkey="q"
+                            invisible="cl_credit_state == 'to_approve'"/>
+                    <button name="action_approve" type="object" string="Approve &amp; Confirm"
+                            class="btn-secondary"
+                            groups="cl_credit_control.group_cl_credit_manager"
+                            confirm="Approve this credit exception and confirm the quotation?"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cl_credit_approval_request" model="ir.actions.act_window">
+        <field name="name">Credit Block</field>
+        <field name="res_model">cl.credit.approval.request</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

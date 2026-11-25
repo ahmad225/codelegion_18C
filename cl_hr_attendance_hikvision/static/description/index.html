@@ -1,0 +1,73 @@
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<section style="font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b;max-width:980px;margin:0 auto;line-height:1.6;">
+
+  <div style="text-align:center;">
+    <img src="banner.png" alt="Hikvision Attendance Sync" style="width:100%;height:auto;border-radius:12px;"/>
+  </div>
+
+  <div style="text-align:center;padding:36px 24px 8px;">
+    <h1 style="font-size:34px;color:#1F3864;margin:0 0 12px;">Terminal punches become attendances</h1>
+    <p style="font-size:18px;color:#555;max-width:720px;margin:0 auto;">Download punches from your Hikvision access-control and time-attendance terminals and turn them into Odoo attendances.</p>
+  </div>
+
+  <div style="background:#F4F6FB;border-radius:12px;padding:28px 32px;margin:32px 0;">
+    <p style="font-size:17px;margin:0;color:#333;">Connect your Hikvision terminals over the local network or a VPN. Odoo downloads new punches every few minutes, matches each one to the employee by their ID on the device, and builds check-ins and check-outs. Night shifts and double swipes are handled, and corrections made by HR are never overwritten.</p>
+  </div>
+
+  <h2 style="font-size:26px;color:#1F3864;text-align:center;margin:40px 0 8px;">What it does</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:16px;">
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128260; Automatic download</h3>
+        <p style="margin:0;color:#555;">New punches are downloaded on the schedule you set, or at once with Sync Now, always from where the last download stopped.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128100; Employee matching</h3>
+        <p style="margin:0;color:#555;">Each punch is booked on the employee whose Hikvision User ID matches the number on the device; earlier punches are processed once the ID is entered.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#127769; Night shifts</h3>
+        <p style="margin:0;color:#555;">A check-out is accepted across midnight, up to the maximum shift length you set.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128070; Double swipes ignored</h3>
+        <p style="margin:0;color:#555;">A second read within a few minutes of the previous one is skipped, with a threshold you choose.</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#9997; HR edits respected</h3>
+        <p style="margin:0;color:#555;">Attendances HR created or corrected are never changed; conflicting punches go to a review list with the reason.</p>
+      </td>
+      <td width="50%" valign="top" style="background:#fff;border:1px solid #E3E8F0;border-radius:12px;padding:22px;">
+        <h3 style="color:#1F3864;margin:0 0 6px;font-size:19px;">&#128269; Punch list</h3>
+        <p style="margin:0;color:#555;">Every downloaded punch is listed with its result: processed, double swipe, not mapped or to review.</p>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#1F3864;color:#fff;border-radius:12px;padding:28px 32px;margin:36px 0;">
+    <h2 style="font-size:22px;margin:0 0 14px;color:#fff;">Built to behave well</h2>
+    <ul style="margin:0;padding-left:20px;font-size:16px;">
+      <li>A connection error never loses punches: the device shows the error and the next download carries on where it stopped.</li>
+      <li>A long backlog is downloaded a part at a time, and downloading a period again never books an attendance twice.</li>
+      <li>A missing check-out is closed with zero hours and flagged for HR, then filled in automatically if the punch still arrives.</li>
+      <li>The device password can be read by system administrators only, and secure connections with certificate checks are on by default.</li>
+      <li>Terminals must be reachable from your Odoo server on the local network or over a VPN; cloud-only setups are not supported, so test with your terminal model before going live.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;color:#666;font-size:15px;margin:36px 0 0;">
+    Odoo 18.0 &bull; Community &amp; Enterprise &bull; depends on Attendances &bull; Licence LGPL-3
+  </p>
+
+  <div style="text-align:center;border-top:1px solid #E3E8F0;margin-top:28px;padding-top:24px;">
+    <h3 style="color:#1F3864;margin:0 0 6px;">Code Legion</h3>
+    <p style="color:#666;margin:0;">Odoo implementation and development.
+      <a href="https://thecodelegion.com" style="color:#2E5090;">thecodelegion.com</a>
+    </p>
+  </div>
+
+</section>

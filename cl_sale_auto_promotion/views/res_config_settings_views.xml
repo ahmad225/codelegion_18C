@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="cl_res_config_settings_view_form_auto_promotion" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cl.sale.auto.promotion</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pricing_setting_container']" position="inside">
+                <setting id="cl_promo_auto_apply_setting" company_dependent="1"
+                         help="Quotations claim the automatic promotions they qualify for whenever their lines change. Loyalty cards, eWallets, gift cards, coupons and codes are left to the salesperson.">
+                    <field name="cl_promo_auto_apply"/>
+                </setting>
+                <setting id="cl_promo_expiry_notice_setting" company_dependent="1"
+                         string="Promotion End Notice"
+                         help="Quotations show a notice when a promotion used on them is about to end or has ended.">
+                    <div class="content-group">
+                        <span class="o_light_label">Start warning </span>
+                        <field name="cl_promo_expiry_notice_days" class="oe_inline text-center" style="width: 3.5rem;"/>
+                        <span class="o_light_label"> days before the end date</span>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

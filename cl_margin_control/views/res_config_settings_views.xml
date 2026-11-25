@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_margin" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.margin.control</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_management.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="Margin Control" name="cl_margin_control_block">
+                    <!-- Information only: nothing is blocked -->
+                    <setting id="cl_margin_alerts" string="Low-Margin Alerts" company_dependent="1"
+                             help="Point out thin margins while the quotation is being written. Nothing is blocked.">
+                        <div class="content-group">
+                            <div class="d-flex align-items-baseline mt8">
+                                <field name="cl_margin_line_alert" class="me-2"/>
+                                <label for="cl_margin_line_alert" string="Highlight lines under"/>
+                                <field name="cl_margin_line_alert_below" class="oe_inline mx-2"
+                                       readonly="not cl_margin_line_alert"/>
+                                <span>%</span>
+                            </div>
+                            <div class="d-flex align-items-baseline mt8">
+                                <field name="cl_margin_order_alert" class="me-2"/>
+                                <label for="cl_margin_order_alert" string="Warn on orders under"/>
+                                <field name="cl_margin_order_alert_below" class="oe_inline mx-2"
+                                       readonly="not cl_margin_order_alert"/>
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </setting>
+                    <!-- The control: approval needed to confirm -->
+                    <setting id="cl_margin_floor" company_dependent="1"
+                             help="A quotation under the floor cannot be confirmed until a margin approver approves it.">
+                        <field name="cl_margin_floor_enabled"/>
+                        <div class="content-group" invisible="not cl_margin_floor_enabled">
+                            <div class="d-flex align-items-baseline mt8">
+                                <label for="cl_margin_floor" string="Floor" class="o_light_label me-2"/>
+                                <field name="cl_margin_floor" class="oe_inline me-2"/>
+                                <span>%</span>
+                            </div>
+                            <div class="mt8">
+                                <label for="cl_margin_approver_group_id" string="Approved by" class="o_light_label me-2"/>
+                                <field name="cl_margin_approver_group_id" class="oe_inline"
+                                       placeholder="Sales Administrators"
+                                       options="{'no_create': True}"/>
+                            </div>
+                            <div class="d-flex align-items-baseline mt8">
+                                <field name="cl_margin_skip_automatic" class="me-2"/>
+                                <label for="cl_margin_skip_automatic"/>
+                            </div>
+                            <div class="text-muted">
+                                Online payments, customer signatures and eCommerce orders are confirmed
+                                anyway and a note is logged. Untick to hold them for approval too.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- account.account has no "active" field, so the web client does not
+         offer Archive / Unarchive by itself. These two entries add them to
+         the Actions menu of the Chart of Accounts, for Account Managers. -->
+    <record id="action_cl_account_archive" model="ir.actions.server">
+        <field name="name">Archive</field>
+        <field name="model_id" ref="account.model_account_account"/>
+        <field name="binding_model_id" ref="account.model_account_account"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_archive()
+        </field>
+    </record>
+
+    <record id="action_cl_account_unarchive" model="ir.actions.server">
+        <field name="name">Unarchive</field>
+        <field name="model_id" ref="account.model_account_account"/>
+        <field name="binding_model_id" ref="account.model_account_account"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_unarchive()
+        </field>
+    </record>
+</odoo>

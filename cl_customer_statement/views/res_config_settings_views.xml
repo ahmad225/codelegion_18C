@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <record id="res_config_settings_view_form_cl_statement" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.cl.customer.statement</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Customer Statements" name="cl_customer_statement_block">
+                    <setting string="Send Monthly Statements" company_dependent="1"
+                             help="Email last month's account statement to every customer with an open balance or activity in that month.">
+                        <field name="cl_statement_auto_send"/>
+                        <div class="content-group mt-2" invisible="not cl_statement_auto_send">
+                            <label for="cl_statement_send_day" string="Send from day"/>
+                            <field name="cl_statement_send_day" class="oe_inline"/>
+                            <span class="text-muted"> of the month</span>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <template id="cl_report_invoice_document_promotion_savings" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <p t-if="o.cl_promotion_savings" class="o_cl_promotion_savings text-end text-muted small mb-2">
+                Includes <strong t-field="o.cl_promotion_savings"/> of promotion savings.
+            </p>
+        </xpath>
+    </template>
+</odoo>

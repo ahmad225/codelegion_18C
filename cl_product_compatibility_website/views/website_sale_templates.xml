@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Inside the cart lines block: it is rendered again each time the
+         customer changes a quantity, so the notice follows the cart. -->
+    <template id="cart_cl_compatibility_warning" inherit_id="website_sale.cart_lines"
+              name="Cart: product compatibility warning">
+        <xpath expr="//div[@id='cart_products']" position="before">
+            <t t-set="cl_compat_messages"
+               t-value="website_sale_order and website_sale_order.sudo()._cl_compatibility_messages(True) or []"/>
+            <div t-if="cl_compat_messages" class="js_cart_lines o_cl_compatibility_warning alert alert-warning" role="alert">
+                <p class="mb-2"><strong>Some products in your cart do not fit together.</strong>
+                    Please adjust your cart before checking out:</p>
+                <ul class="mb-0">
+                    <li t-foreach="cl_compat_messages" t-as="cl_message" t-out="cl_message"/>
+                </ul>
+            </div>
+        </xpath>
+    </template>
+</odoo>

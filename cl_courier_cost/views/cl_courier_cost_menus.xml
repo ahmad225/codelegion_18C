@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Inventory > Courier Costs: directly under the app, because Odoo 18 shows the
+         Reporting and Configuration menus only to Inventory administrators. -->
+    <menuitem id="menu_cl_courier_cost_root"
+              name="Courier Costs"
+              parent="stock.menu_stock_root"
+              groups="cl_courier_cost.group_cl_courier_user"
+              sequence="90"/>
+    <menuitem id="menu_cl_courier_cost_log"
+              name="Cost Log"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_cost_action"
+              sequence="10"/>
+    <menuitem id="menu_cl_courier_cost_analysis"
+              name="Analysis"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_cost_action_pivot"
+              sequence="20"/>
+    <menuitem id="menu_cl_courier_cost_export"
+              name="Export Vendor Sheet"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_cost_export_action"
+              sequence="30"/>
+    <menuitem id="menu_cl_courier_cost_import"
+              name="Import Vendor Sheet"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_cost_import_action"
+              sequence="40"/>
+
+    <menuitem id="menu_cl_courier_formula"
+              name="Courier Formulas"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_formula_action"
+              groups="cl_courier_cost.group_cl_courier_manager"
+              sequence="60"/>
+    <menuitem id="menu_cl_courier_variable"
+              name="Courier Variables"
+              parent="menu_cl_courier_cost_root"
+              action="cl_courier_variable_action"
+              groups="cl_courier_cost.group_cl_courier_manager"
+              sequence="61"/>
+</odoo>

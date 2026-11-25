@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) Code Legion (<https://thecodelegion.com>). License LGPL-3.0 or later. -->
+<odoo>
+    <!-- Base product form, used by both the product and the product variant screens -->
+    <record id="product_template_form_view_cl_allowed_units" model="ir.ui.view">
+        <field name="name">product.template.form.cl.allowed.units</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']//field[@name='categ_id']" position="after">
+                <field name="uom_category_id" invisible="1"/>
+                <field name="product_uom_ids"
+                       string="Allowed Units"
+                       widget="many2many_tags"
+                       domain="[('category_id', '=', uom_category_id)]"
+                       options="{'no_create': True}"
+                       invisible="type == 'service'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
