@@ -39,7 +39,7 @@ Turn each of your websites into an installable app (Progressive Web App).
     'author': 'Code Legion',
     'website': 'https://thecodelegion.com',
     'category': 'Website/Website',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'license': 'LGPL-3',
     'depends': ['website'],
     'data': [

@@ -30,7 +30,7 @@ Behaves well:
     'author': 'Code Legion',
     'website': 'https://thecodelegion.com',
     'category': 'Website/eCommerce',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'license': 'LGPL-3',
     'depends': ['website_sale', 'rating'],
     'data': [

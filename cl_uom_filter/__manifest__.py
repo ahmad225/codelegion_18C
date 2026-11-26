@@ -29,7 +29,7 @@ This module is standalone and needs no other app-store module.
     'author': 'Code Legion',
     'website': 'https://thecodelegion.com',
     'category': 'Inventory/Inventory',
-    'version': '18.0.2.0.0',
+    'version': '18.0.2.0.1',
     'license': 'LGPL-3',
     'depends': [
         'product',
