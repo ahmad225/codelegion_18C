@@ -40,7 +40,7 @@ Behaves well:
     'author': 'Code Legion',
     'website': 'https://thecodelegion.com',
     'category': 'Accounting/Accounting',
-    'version': '18.0.1.0.1',
+    'version': '18.0.1.0.2',
     'license': 'LGPL-3',
     'depends': ['account', 'portal'],
     'data': [

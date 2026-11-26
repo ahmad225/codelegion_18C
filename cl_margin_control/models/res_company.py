@@ -37,7 +37,7 @@ class ResCompany(models.Model):
              "quotations they approve. Leave empty to let the Sales "
              "Administrators approve.")
     cl_margin_skip_automatic = fields.Boolean(
-        string='Let Automatic Confirmations Through',
+        string='Margin: Let Automatic Confirmations Through',
         default=True,
         help="Orders confirmed by the system (online payment, customer signature, "
              "eCommerce, other automations) are confirmed even under the margin "

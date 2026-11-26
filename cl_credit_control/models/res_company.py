@@ -32,7 +32,7 @@ class ResCompany(models.Model):
              "'Sales Credit Limit' setting, which is switched on automatically.",
     )
     cl_credit_skip_automatic = fields.Boolean(
-        string="Let Automatic Confirmations Through",
+        string="Credit: Let Automatic Confirmations Through",
         default=True,
         help="Orders confirmed by the system (online payment, customer signature, "
              "other automations) are confirmed even if the customer is blocked, "

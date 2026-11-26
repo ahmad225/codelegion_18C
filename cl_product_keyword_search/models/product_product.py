@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
         string='Variant Search Keywords',
         help='Extra keywords for this variant only. The keywords of the product apply to all its variants.')
     cl_variant_search_text = fields.Char(
-        string='Search Keyword', compute='_compute_cl_variant_search_text', store=True,
+        string='Variant Search Keyword', compute='_compute_cl_variant_search_text', store=True,
         index='trigram',
         help='The keywords of the product and of this variant, as text.')
 

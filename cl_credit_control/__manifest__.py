@@ -38,7 +38,7 @@ Other points:
     'author': 'Code Legion',
     'website': 'https://thecodelegion.com',
     'category': 'Sales/Sales',
-    'version': '18.0.1.0.1',
+    'version': '18.0.1.0.2',
     'license': 'LGPL-3',
     'depends': [
         'sale_management',

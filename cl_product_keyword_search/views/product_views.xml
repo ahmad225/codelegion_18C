@@ -100,7 +100,7 @@
         <field name="inherit_id" ref="product.product_search_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='cl_keyword_search_text']" position="replace">
-                <field name="cl_variant_search_text"/>
+                <field name="cl_variant_search_text" string="Search Keyword"/>
             </xpath>
             <xpath expr="//filter[@name='cl_without_keywords']" position="attributes">
                 <attribute name="domain">[('cl_variant_search_text', '=', False)]</attribute>

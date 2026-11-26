@@ -27,7 +27,7 @@
                              help="Quotations need approval when the order would take the customer over the credit limit set on the customer. Odoo alone only shows a warning.">
                         <field name="cl_credit_block_limit"/>
                     </setting>
-                    <setting id="cl_credit_skip_automatic" company_dependent="1"
+                    <setting id="cl_credit_skip_automatic" company_dependent="1" string="Let Automatic Confirmations Through"
                              help="Orders confirmed by online payment, customer signature or other automations are confirmed anyway, with a note on the order. Untick to block them as well.">
                         <field name="cl_credit_skip_automatic"/>
                     </setting>

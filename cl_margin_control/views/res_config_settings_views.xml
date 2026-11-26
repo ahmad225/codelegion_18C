@@ -46,7 +46,7 @@
                             </div>
                             <div class="d-flex align-items-baseline mt8">
                                 <field name="cl_margin_skip_automatic" class="me-2"/>
-                                <label for="cl_margin_skip_automatic"/>
+                                <label for="cl_margin_skip_automatic" string="Let Automatic Confirmations Through"/>
                             </div>
                             <div class="text-muted">
                                 Online payments, customer signatures and eCommerce orders are confirmed
